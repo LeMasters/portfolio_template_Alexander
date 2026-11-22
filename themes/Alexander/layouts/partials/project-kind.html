@@ -1,0 +1,12 @@
+{{- /*
+  A project's kind, from the Kind field of the Projects form (front-matter key
+  projectKind; Hugo reserves "kind"):
+    "case-study"  full-width card on the home page; long page with an
+                  at-a-glance panel and a contents list
+    "project"     standard card and page (also when the field is empty or unrecognised)
+    "brief"       one line in a list on the home page; short page
+  Usage: {{ $kind := partial "project-kind.html" $page }}
+*/ -}}
+{{- $k := lower (string (.Params.projectKind | default "")) -}}
+{{- if not (in (slice "case-study" "brief") $k) }}{{ $k = "project" }}{{ end -}}
+{{- return $k -}}

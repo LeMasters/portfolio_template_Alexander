@@ -1,0 +1,53 @@
+{{- /*
+  Responsive image. Every image on the site comes through here.
+
+  Usage:
+    {{ partial "img.html" (dict "src" .Params.image "alt" "…" "sizes" "…" "eager" true "ratio" "") }}
+
+  - Photos (JPEG, PNG, WebP) found in the site's images are resized by Hugo into WebP
+    at several widths (never wider than the original), with srcset/sizes so each
+    browser downloads only what its screen needs, and width/height so the page does
+    not jump while loading. Phone photos are turned upright using their EXIF data.
+  - Anything else (GIF, SVG, a full web address) is used as is.
+  - eager: true for the one image that should load first (the wide feature);
+    all others load lazily.
+  - Published copies get readable names: the original's name with every run of
+    spaces or other unsafe characters turned into one underscore, plus the width,
+    e.g. "Catbug cartoon still.png" → images/Catbug_cartoon_still-800w.webp
+    (partial "img-name.html"). No %20 and no Hugo hash codes in addresses.
+*/ -}}
+{{- $src := trim (string .src) " " -}}
+{{- $alt := .alt | default "" -}}
+{{- $sizes := .sizes | default "100vw" -}}
+{{- $loading := cond (.eager | default false) "eager" "lazy" -}}
+{{- $priority := cond (.eager | default false) "high" "auto" -}}
+{{- $r := false -}}
+{{- if and $src (not (findRE `^(?i)(https?:)?//` $src)) -}}
+  {{- $r = resources.Get (strings.TrimPrefix "/" $src) -}}
+{{- end -}}
+{{- if and $r (eq $r.ResourceType "image") (in (slice "jpeg" "png" "webp") $r.MediaType.SubType) -}}
+  {{- if eq $r.MediaType.SubType "jpeg" }}{{ $r = $r.Filter images.AutoOrient }}{{ end -}}
+  {{- $name := partial "img-name.html" $r -}}
+  {{- $widths := slice 480 800 1200 1600 2000 -}}
+  {{- $set := slice -}}
+  {{- $fallback := false -}}
+  {{- range $widths -}}
+    {{- if le . $r.Width -}}
+      {{- $v := $r.Resize (printf "%dx webp" .) -}}
+      {{- $v = resources.Copy (printf "%s-%dw.webp" $name $v.Width) $v -}}
+      {{- $set = $set | append (printf "%s %dw" $v.RelPermalink $v.Width) -}}
+      {{- if or (not $fallback) (le . 1200) }}{{ $fallback = $v }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $fallback -}}
+    {{- /* Original narrower than 480 px: one WebP copy at its own width. */ -}}
+    {{- $fallback = $r.Resize (printf "%dx webp" $r.Width) -}}
+    {{- $fallback = resources.Copy (printf "%s-%dw.webp" $name $fallback.Width) $fallback -}}
+    {{- $set = slice (printf "%s %dw" $fallback.RelPermalink $fallback.Width) -}}
+  {{- end -}}
+<img src="{{ $fallback.RelPermalink }}" srcset="{{ delimit $set ", " }}" sizes="{{ $sizes }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" alt="{{ $alt }}" loading="{{ $loading }}" decoding="async"{{ if eq $priority "high" }} fetchpriority="high"{{ end }}>
+{{- else if $r -}}
+<img src="{{ $r.RelPermalink }}" alt="{{ $alt }}" loading="{{ $loading }}" decoding="async">
+{{- else if $src -}}
+<img src="{{ partial "url.html" $src }}" alt="{{ $alt }}" loading="{{ $loading }}" decoding="async">
+{{- end -}}

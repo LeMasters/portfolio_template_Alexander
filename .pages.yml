@@ -1,0 +1,414 @@
+# Pages CMS configuration for the Alexander portfolio theme.
+# See https://pagescms.org/docs/configuration/
+#
+# Eight forms:
+#   Profile     content/_index.md        name, expertise, email, LinkedIn, GitHub, links, résumé,
+#                                        body = About
+#   Projects    content/projects/*.md    one file per project; body = description
+#   Gallery     content/gallery/*.md     one file per image; body = caption;
+#                                        home = show on the home page
+#   Experience  content/experience/*.md  one file per job; body = optional detail;
+#                                        project = dropdown of the student's projects
+#   Education   content/education/*.md   one file per degree; body = optional detail
+#   Tools       data/tools.yaml          a list: tool name + optional note
+#   Appearance  data/style.yaml          colour scheme; typeface for text and for titles
+#   Analytics   data/analytics.yaml      visitor statistics (service, code); AI-training
+#                                        choice; Google Search Console code
+#
+# Every key in these files has a field here (hidden if need be), so a save never
+# drops a setting. Paths have NO leading slash, so they work when the site lives in
+# a subfolder (username.github.io/portfolio/).
+
+media:
+  - name: images
+    label: Images
+    input: static/images
+    output: images
+  - name: files
+    label: Files
+    input: static/files
+    output: files
+
+content:
+  - name: profile
+    label: Profile
+    type: file
+    path: content/_index.md
+    format: yaml-frontmatter
+    fields:
+      - name: name
+        label: Your name
+        type: string
+        required: true
+        description: Shown in large letters at the top of your home page.
+      - name: expertise
+        label: Area of expertise
+        type: string
+        description: 'One line under your name, e.g. "Game designer: systems and level design".'
+      - name: body
+        label: About you (the About section; leave empty to hide it)
+        type: rich-text
+      - name: resume
+        label: Résumé (PDF)
+        type: file
+        options:
+          media: files
+      - name: email
+        label: Email
+        type: string
+      - name: linkedin
+        label: LinkedIn address
+        type: string
+        description: e.g. https://www.linkedin.com/in/yourname. Leave empty to hide the LinkedIn button.
+      - name: github
+        label: GitHub address
+        type: string
+        description: e.g. https://github.com/yourname. Leave empty to hide the GitHub button.
+      - name: links
+        label: Custom Links
+        type: object
+        list: true
+        description: Your other sites, e.g. itch.io, ArtStation, Behance. Full addresses are best. Shown under Contact.
+        fields:
+          - name: label
+            label: Link text
+            type: string
+          - name: url
+            label: Address
+            type: string
+
+  - name: projects
+    label: Projects
+    type: collection
+    path: content/projects
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, weight, year]
+      sort: [weight, title]
+      default:
+        sort: weight
+        order: asc
+    fields:
+      - name: title
+        label: Project title
+        type: string
+        required: true
+      - name: projectKind
+        label: Kind
+        type: select
+        default: project
+        description: "Case study: your fullest projects, told as a story. A full-width card at the top of the home page and a long page. Project: a standard card and page. Brief: one line in a list on the home page and a short page. You can change this at any time without losing anything."
+        options:
+          values:
+            - name: case-study
+              label: Case study
+            - name: project
+              label: Project
+            - name: brief
+              label: Brief
+      - name: caption
+        label: Caption
+        type: string
+        description: One line under the image, e.g. "Puzzle game · Unity · solo".
+      - name: body
+        label: Project description
+        type: rich-text
+        description: "The text of the project's own page. For a case study, keep this to a short opening and tell the story in Sections, below. For a brief, two or three sentences are enough."
+      - name: image
+        label: Image
+        type: image
+        description: "1800 × 1200 (3:2), under about 400 KB. On the home page, a wide card shows only about the middle 60% of a 3:2 image's height, so keep titles, HUD and faces away from the top and bottom edges. Squarer images (4:3, square, portrait) are shown whole there, on a tinted band. The project's own page always shows the whole image."
+        options:
+          media: images
+      - name: alt
+        label: Alt text
+        type: string
+        description: "Alt text: one sentence saying what the image shows, read aloud to people who cannot see it (and used by search engines)."
+      - name: year
+        label: Year
+        type: string
+      - name: role
+        label: Your role
+        type: string
+      - name: links
+        label: Links
+        type: object
+        list: true
+        description: e.g. itch.io, Steam, a trailer.
+        fields:
+          - name: label
+            label: Link text
+            type: string
+            description: e.g. "Play it on itch.io". Defaults to "View project".
+          - name: url
+            label: Address
+            type: string
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: sections
+        label: Sections (picture and text)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{fields.heading}"
+          default:
+            - heading: Problem
+            - heading: My role
+            - heading: Research
+            - heading: Prototype
+            - heading: Iteration
+            - heading: Outcome
+            - heading: Reflection
+        description: "Each section is a picture beside a block of text, shown after the description; the picture swaps sides with every section, and on phones they stack. A new project starts with seven suggested headings. Fill in the ones that fit, in any order (drag to reorder); rename, repeat or delete them. A section with neither a picture nor text doesn't appear. Case studies and projects only: a brief's page doesn't show Sections."
+        fields:
+          - name: heading
+            label: Heading
+            type: string
+            description: e.g. "First prototype". Optional.
+          - name: image
+            label: Picture
+            type: image
+            description: Any shape; shown whole, about half the page wide.
+            options:
+              media: images
+          - name: alt
+            label: Alt text
+            type: string
+            description: "Alt text: one sentence saying what the image shows, read aloud to people who cannot see it (and used by search engines)."
+          - name: text
+            label: Text
+            type: text
+            description: "A paragraph or two. Leave a blank line between paragraphs; **bold** and [links](https://example.com) work."
+      - name: weight
+        label: Order
+        type: number
+        description: 1 appears first (the wide feature, unless you have exactly two projects); the rest follow in rows, in this order.
+
+  - name: gallery
+    label: Gallery
+    type: collection
+    path: content/gallery
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, weight]
+      sort: [weight, title]
+      default:
+        sort: weight
+        order: asc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        description: Shown under the thumbnail in the Gallery and above the caption on the image's own page.
+      - name: image
+        label: Image
+        type: image
+        required: true
+        description: Any shape. The gallery shows a square crop; the image's own page shows it whole. Up to 2000 px on the long side, under about 500 KB.
+        options:
+          media: images
+      - name: home
+        label: Show on home page
+        type: boolean
+        default: false
+        description: Ticked images appear in the Gallery section of your home page, in Order, as many as you tick. If you tick none, the first five appear. Every image is always on the full Gallery page.
+      - name: alt
+        label: Alt text
+        type: string
+        description: "Alt text: one sentence saying what the image shows, read aloud to people who cannot see it (and used by search engines)."
+      - name: weight
+        label: Order
+        type: number
+        description: 1 appears first.
+      - name: body
+        label: Caption
+        type: rich-text
+        description: The explainer text under the image on its own page. Delete every entry to hide the Gallery.
+
+  - name: experience
+    label: Experience
+    type: collection
+    path: content/experience
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: role
+      fields: [role, organization, dates, weight]
+      sort: [weight, role]
+      default:
+        sort: weight
+        order: asc
+    fields:
+      - name: role
+        label: Role
+        type: string
+        required: true
+        description: e.g. "Tools Engineering Intern" or "Undergraduate Teaching Assistant". Delete every entry to hide the Experience section.
+      - name: organization
+        label: Organization
+        type: string
+      - name: website
+        label: Organization's website (optional)
+        type: string
+        description: Makes the organization's name a link.
+      - name: location
+        label: Location (optional)
+        type: string
+        description: e.g. "Columbus, OH" or "Remote".
+      - name: dates
+        label: Dates
+        type: string
+        description: e.g. "May–Aug 2026" or "Fall 2025 – present".
+      - name: weight
+        label: Order
+        type: number
+        description: 1 appears first. Usually the most recent.
+      - name: body
+        label: What you did (optional)
+        type: rich-text
+        description: One to three sentences, ideally with a result you can point to.
+      - name: project
+        label: Related project (optional)
+        type: reference
+        description: Choose one of your projects to link to it from this entry.
+        options:
+          collection: projects
+          label: "{title}"
+          search: title
+
+  - name: education
+    label: Education
+    type: collection
+    path: content/education
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: degree
+      fields: [degree, school, year, weight]
+      sort: [weight, year]
+      default:
+        sort: weight
+        order: asc
+    fields:
+      - name: degree
+        label: Degree or certificate
+        type: string
+        required: true
+        description: e.g. "B.S., Games + Simulation (expected)". Delete every entry to hide the Education section.
+      - name: school
+        label: School
+        type: string
+      - name: year
+        label: Year
+        type: string
+        description: e.g. "2027" or "2023–2027".
+      - name: weight
+        label: Order
+        type: number
+        description: 1 appears first.
+      - name: body
+        label: Details (optional)
+        type: rich-text
+
+  - name: tools
+    label: Tools
+    type: file
+    path: data/tools.yaml
+    format: yaml
+    list: true
+    fields:
+      - name: name
+        label: Tool
+        type: string
+        required: true
+        description: e.g. Unity, Blender, Figma. Remove every tool to hide the Tools section.
+      - name: note
+        label: Note (optional)
+        type: string
+        description: e.g. "C#; three years".
+
+  - name: style
+    label: Appearance
+    type: file
+    path: data/style.yaml
+    format: yaml
+    fields:
+      - name: palette
+        label: Colour scheme
+        type: select
+        description: Applies to every page. Both are checked for readability.
+        options:
+          values:
+            - name: ink
+              label: Ink (white, blue accent)
+            - name: dusk
+              label: Dusk (pale lavender, violet accent)
+      - name: text
+        label: Typeface for text
+        type: select
+        description: Used for everything except titles.
+        options:
+          values:
+            - name: atkinson
+              label: Atkinson Hyperlegible Next (sans-serif, made for legibility)
+            - name: inter
+              label: Inter (sans-serif, neutral)
+            - name: source-serif
+              label: Source Serif 4 (serif, classic)
+            - name: fraunces
+              label: Fraunces (serif, expressive)
+      - name: titles
+        label: Typeface for titles
+        type: select
+        description: Your name, project titles, and the name at the bottom of the page.
+        options:
+          values:
+            - name: fraunces
+              label: Fraunces (serif, expressive)
+            - name: source-serif
+              label: Source Serif 4 (serif, classic)
+            - name: inter
+              label: Inter (sans-serif, neutral)
+            - name: atkinson
+              label: Atkinson Hyperlegible Next (sans-serif, made for legibility)
+
+  - name: analytics
+    label: Analytics
+    type: file
+    path: data/analytics.yaml
+    format: yaml
+    fields:
+      - name: service
+        label: Service
+        type: select
+        default: none
+        description: Count visitors with a free service (no cookies). See "Visitor statistics" in the README. Choose NONE to turn it off.
+        options:
+          values:
+            - name: none
+              label: NONE
+            - name: goatcounter
+              label: GoatCounter
+            - name: cloudflare
+              label: Cloudflare Web Analytics
+      - name: code
+        label: Code
+        type: string
+        description: 'GoatCounter: the code you chose when signing up (e.g. janedoe). Cloudflare: paste the whole snippet from Cloudflare, or just its token.'
+      - name: aiTraining
+        label: Allow AI companies to train on this site
+        type: boolean
+        default: false
+        description: Off (recommended) asks AI companies not to use your site to train their models. Search engines, including AI search, can still find you either way.
+      - name: googleVerification
+        label: Google Search Console code (optional)
+        type: string
+        description: Only if you add your site to Google Search Console and choose the "HTML tag" method; paste the code from its content="…" part.

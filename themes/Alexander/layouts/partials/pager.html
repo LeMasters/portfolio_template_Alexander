@@ -1,0 +1,17 @@
+{{- /*
+  Previous / next links through an ordered list of pages (projects, gallery images).
+  Usage: {{ partial "pager.html" (dict "page" . "pages" $list "label" "More projects") }}
+*/ -}}
+{{- $current := .page -}}
+{{- $prev := false -}}{{- $next := false -}}{{- $found := false -}}
+{{- range .pages -}}
+  {{- if $found -}}{{- if not $next }}{{ $next = . }}{{ end -}}
+  {{- else if eq .RelPermalink $current.RelPermalink -}}{{- $found = true -}}
+  {{- else -}}{{- $prev = . -}}{{- end -}}
+{{- end -}}
+{{- if or $prev $next }}
+<nav class="pager" aria-label="{{ .label }}">
+  {{- with $prev }}<a href="{{ .RelPermalink }}" rel="prev">← {{ .Title }}</a>{{ else }}<span></span>{{ end }}
+  {{- with $next }}<a href="{{ .RelPermalink }}" rel="next">{{ .Title }} →</a>{{ end }}
+</nav>
+{{- end -}}

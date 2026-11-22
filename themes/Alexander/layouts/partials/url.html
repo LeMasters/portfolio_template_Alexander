@@ -1,0 +1,24 @@
+{{- /*
+  Turns whatever a student typed into a working address.
+  - Full addresses (https://, http://, mailto:, tel:, #anchor) pass through.
+  - Web addresses typed without https:// (example.itch.io/game, www.linkedin.com/...)
+    get https:// added.
+  - Anything else is a file in the site (images/x.jpg, files/resume.pdf) and is made
+    relative to the site, so it works when the site lives in a subfolder.
+  Usage: {{ partial "url.html" .image }}
+*/ -}}
+{{- $u := trim (string .) " " -}}
+{{- if eq $u "" -}}
+{{- else if or (hasPrefix $u "http://") (hasPrefix $u "https://") (hasPrefix $u "mailto:") (hasPrefix $u "tel:") (hasPrefix $u "#") -}}
+  {{- $u -}}
+{{- else if hasPrefix $u "//" -}}
+  {{- printf "https:%s" $u -}}
+{{- else -}}
+  {{- $first := index (split (strings.TrimPrefix "/" $u) "/") 0 -}}
+  {{- $isFile := findRE `(?i)\.(jpe?g|png|gif|webp|svg|avif|pdf|html?|zip|mp4|webm)$` $first -}}
+  {{- if and (in $first ".") (not $isFile) -}}
+    {{- printf "https://%s" $u -}}
+  {{- else -}}
+    {{- strings.TrimPrefix "/" $u | relURL -}}
+  {{- end -}}
+{{- end -}}

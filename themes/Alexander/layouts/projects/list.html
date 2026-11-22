@@ -1,0 +1,11 @@
+{{ define "main" }}
+{{ partial "masthead.html" . }}
+<main id="main" class="wrap projects">
+  <h1 class="page__title">All projects</h1>
+  <div class="projects__row projects__row--3">
+    {{- range (partialCached "project-groups.html" . "project-groups").all }}
+    {{ partial "project-card.html" (dict "page" . "size" "small" "level" 2) }}
+    {{- end }}
+  </div>
+</main>
+{{ end }}

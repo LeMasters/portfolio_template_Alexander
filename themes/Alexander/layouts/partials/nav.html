@@ -1,0 +1,32 @@
+{{- /*
+  Section menu. Only sections with content get a link (see sections.html).
+  Wide screens: a row of small links. Narrow screens: a "Menu" button that opens the
+  same list (a native <details> element: works without JavaScript; the small script
+  in baseof.html only closes it after a choice, on Escape, or on a tap elsewhere).
+  On pages other than home, section links lead back to that part of the home page.
+  On the Gallery page and gallery image pages, "Gallery" is marked as the current place.
+*/ -}}
+{{- $sections := partialCached "sections.html" . "sections" -}}
+{{- with $sections }}
+{{- $prefix := cond $.IsHome "" site.Home.RelPermalink -}}
+{{- $items := slice -}}
+{{- range . -}}
+  {{- if .page -}}
+    {{- $current := cond (eq .page $.RelPermalink) ` aria-current="page"` "" -}}
+    {{- $items = $items | append (printf `<li><a href="%s"%s>%s</a></li>` .page $current .label) -}}
+  {{- else if .url -}}
+    {{- $items = $items | append (printf `<li><a href="%s" rel="me">%s<span aria-hidden="true"> ↗</span></a></li>` (.url | htmlEscape) .label) -}}
+  {{- else -}}
+    {{- $current := cond (and (eq .id "gallery") (eq $.Section "gallery")) ` aria-current="page"` "" -}}
+    {{- $items = $items | append (printf `<li><a href="%s#%s"%s>%s</a></li>` $prefix .id $current .label) -}}
+  {{- end -}}
+{{- end -}}
+{{- $list := delimit $items "" | safeHTML -}}
+<nav class="sitenav" aria-label="Sections">
+  <ul class="sitenav__row">{{ $list }}</ul>
+  <details class="sitenav__menu">
+    <summary>Menu</summary>
+    <ul class="sitenav__panel">{{ $list }}</ul>
+  </details>
+</nav>
+{{- end }}

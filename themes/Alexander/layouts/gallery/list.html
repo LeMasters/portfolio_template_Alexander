@@ -1,0 +1,25 @@
+{{ define "main" }}
+{{- /* The gallery: a grid of square thumbnails, each with its title under it; each opens
+     the image's own page. The link reads the alt text (if any), then the title. */ -}}
+{{ partial "masthead.html" . }}
+<main id="main" class="wrap page gallery">
+  <h1 class="page__title">Gallery</h1>
+  {{- with .Content }}<div class="page__body">{{ . }}</div>{{ end }}
+  <ul class="gallery__grid">
+    {{- range $i, $p := partial "gallery-items.html" . }}
+    <li class="gallery__item">
+      <a class="gallery__link" href="{{ $p.RelPermalink }}">
+        <span class="gallery__frame">
+          {{- partial "img.html" (dict
+              "src" $p.Params.image
+              "alt" $p.Params.alt
+              "eager" (lt $i 6)
+              "sizes" "(min-width: 74rem) 17rem, (min-width: 40rem) 30vw, 46vw") -}}
+        </span>
+        <span class="gallery__title">{{ $p.Title }}</span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</main>
+{{ end }}

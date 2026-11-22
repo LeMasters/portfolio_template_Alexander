@@ -1,0 +1,142 @@
+{{- /* Colour scheme and typefaces chosen in data/style.yaml; anything unrecognised
+       falls back to the defaults (ink; Atkinson for text, Fraunces for titles). */ -}}
+{{- $fonts := dict
+    "source-serif" "source-serif/source-serif-4-latin-wght-normal.woff2"
+    "fraunces"     "fraunces/fraunces-latin-wght-normal.woff2"
+    "atkinson"     "atkinson/atkinson-hyperlegible-next-latin-wght-normal.woff2"
+    "inter"        "inter/inter-latin-wght-normal.woff2" -}}
+{{- $style := site.Data.style | default dict -}}
+{{- $palettes := slice "ink" "dusk" -}}
+{{- $palette := lower (string ($style.palette | default "ink")) -}}
+{{- if not (in $palettes $palette) }}{{ $palette = "ink" }}{{ end -}}
+{{- $textFont := lower (string ($style.text | default "atkinson")) -}}
+{{- $titleFont := lower (string ($style.titles | default "fraunces")) -}}
+{{- if not (index $fonts $textFont) }}{{ $textFont = "atkinson" }}{{ end -}}
+{{- if not (index $fonts $titleFont) }}{{ $titleFont = "fraunces" }}{{ end -}}
+<!doctype html>
+<html lang="{{ site.LanguageCode | default "en" }}" data-palette="{{ $palette }}" data-text-font="{{ $textFont }}" data-title-font="{{ $titleFont }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  {{- $home := site.Home -}}
+  {{- $name := $home.Params.name | default "Portfolio" -}}
+  {{- $title := cond .IsHome (printf "%s%s" $name (cond (ne ($home.Params.expertise | default "") "") (printf " · %s" $home.Params.expertise) "")) (printf "%s · %s" .Title $name) -}}
+  {{- $desc := cond .IsHome ($home.Params.expertise | default "") (.Params.caption | default (.Summary | plainify) | default "") -}}
+  <title>{{ $title }}</title>
+  {{- with $desc }}
+  <meta name="description" content="{{ . }}">
+  {{- end }}
+  <link rel="canonical" href="{{ .Permalink }}">
+
+  {{- /* AI training opt-out (Analytics form → "Allow AI training", off by default;
+         stored in data/analytics.yaml with the Search Console code).
+         These tags travel with every page, so they work even where robots.txt
+         cannot be read (sites in a subfolder, such as username.github.io/repo/).
+         - tdm-reservation: W3C TDM Reservation Protocol; reserves text-and-data-
+           mining rights (the opt-out recognised by EU copyright law, Art. 4 CDSM).
+         - robots noai, noimageai: informal tags some AI crawlers and dataset
+           builders honour. Ignored by search engines; search is unaffected. */}}
+  {{- $set := site.Data.analytics | default dict -}}
+  {{- if not $set.aiTraining }}
+  <meta name="tdm-reservation" content="1">
+  <meta name="robots" content="noai, noimageai">
+  {{- end }}
+  {{- with $set.googleVerification }}
+  <meta name="google-site-verification" content="{{ . }}">
+  {{- end }}
+
+  {{- /* Sharing previews (messages, social media). */}}
+  <meta property="og:type" content="{{ cond .IsHome "profile" "article" }}">
+  <meta property="og:title" content="{{ $title }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  {{- with $desc }}
+  <meta property="og:description" content="{{ . }}">
+  {{- end }}
+  {{- $shareImage := "" -}}
+  {{- $shareSrc := .Params.image -}}
+  {{- if and .IsHome (not $shareSrc) -}}
+    {{- with index (partialCached "project-groups.html" . "project-groups").all 0 }}{{ $shareSrc = .Params.image }}{{ end -}}
+  {{- else if and (eq .Kind "section") (eq .Section "gallery") -}}
+    {{- with index (partial "gallery-items.html" .) 0 }}{{ $shareSrc = .Params.image }}{{ end -}}
+  {{- end -}}
+  {{- with $shareSrc -}}
+    {{- $r := resources.Get (strings.TrimPrefix "/" .) -}}
+    {{- if and $r (in (slice "jpeg" "png" "webp") $r.MediaType.SubType) }}
+  {{- $og := $r.Fill "1200x630 Center jpg" }}{{ $og = resources.Copy (printf "%s-share.jpg" (partial "img-name.html" $r)) $og }}{{ $shareImage = $og.Permalink }}
+  <meta property="og:image" content="{{ $og.Permalink }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+    {{- end -}}
+  {{- end }}
+
+  {{- /* Favicon: the student's initials, drawn as SVG. No file, no request. */ -}}
+  {{- $initials := "" -}}
+  {{- range first 2 (split $name " ") }}{{ $initials = printf "%s%s" $initials (upper (substr . 0 1)) }}{{ end -}}
+  {{- $svg := printf `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#16181b"/><text x="32" y="43" font-family="system-ui,sans-serif" font-size="28" font-weight="700" text-anchor="middle" fill="#fff">%s</text></svg>` $initials }}
+  <link rel="icon" href="{{ printf "data:image/svg+xml;base64,%s" ($svg | base64Encode) | safeURL }}">
+
+  {{- /* Start downloading the two chosen fonts at once (Latin, upright). */}}
+  {{- range uniq (slice $textFont $titleFont) }}
+  <link rel="preload" href="{{ printf "fonts/%s" (index $fonts .) | relURL }}" as="font" type="font/woff2" crossorigin>
+  {{- end }}
+  {{- $css := slice (resources.Get "css/fonts.css") (resources.Get "css/main.css") | resources.Concat "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+
+  {{- /* Structured data: tells search engines this is a person's portfolio. */ -}}
+  {{- if .IsHome -}}
+    {{- $sameAs := slice -}}
+    {{- range slice $home.Params.linkedin $home.Params.github }}{{ with . }}{{ $sameAs = $sameAs | append (partial "url.html" .) }}{{ end }}{{ end -}}
+    {{- range $home.Params.links }}{{ with .url }}{{ $sameAs = $sameAs | append (partial "url.html" .) }}{{ end }}{{ end -}}
+    {{- $person := dict "@context" "https://schema.org" "@type" "Person" "name" $name "url" .Permalink -}}
+    {{- with $home.Params.expertise }}{{ $person = merge $person (dict "description" .) }}{{ end -}}
+    {{- with $sameAs }}{{ $person = merge $person (dict "sameAs" .) }}{{ end }}
+  <script type="application/ld+json">{{ $person | jsonify | safeJS }}</script>
+  {{- else if and .IsPage (in (slice "projects" "gallery") .Section) -}}
+    {{- /* A project or gallery page: describe it as a creative work by the student. */ -}}
+    {{- $work := dict "@context" "https://schema.org" "@type" "CreativeWork" "name" .Title "url" .Permalink
+          "creator" (dict "@type" "Person" "name" $name "url" $home.Permalink) -}}
+    {{- with $desc }}{{ $work = merge $work (dict "description" .) }}{{ end -}}
+    {{- with $shareImage }}{{ $work = merge $work (dict "image" .) }}{{ end -}}
+    {{- with .Params.year }}{{ $work = merge $work (dict "dateCreated" (string .)) }}{{ end -}}
+    {{- with .Params.tags }}{{ $work = merge $work (dict "keywords" (delimit . ", ")) }}{{ end }}
+  <script type="application/ld+json">{{ $work | jsonify | safeJS }}</script>
+  {{- end }}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{ block "main" . }}{{ end }}
+  {{ partial "bottom-block.html" . }}
+  {{- /* Small enhancements; the page works without them.
+         1. Record the sticky header's height, so menu jumps land just below it.
+         2. Phone menu: close after a choice, on Escape, or on a tap elsewhere.
+         3. Sections pictures: open their section in its <dialog> (without script
+            the link opens the picture itself); a click on the backdrop closes it.
+            The dialog's own Escape key and close button work natively. */}}
+  <script>
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("[data-dialog]");
+      const dialog = link && document.getElementById(link.dataset.dialog);
+      if (dialog && dialog.showModal) { e.preventDefault(); dialog.showModal(); return; }
+      if (e.target.matches && e.target.matches("dialog[open]")) e.target.close();
+    });
+    (() => {
+      const header = document.querySelector(".masthead");
+      if (header && "ResizeObserver" in window) {
+        new ResizeObserver(() => {
+          document.documentElement.style.setProperty("--header-height", header.offsetHeight + "px");
+        }).observe(header);
+      }
+      const menu = document.querySelector(".sitenav__menu");
+      if (!menu) return;
+      menu.addEventListener("click", (e) => { if (e.target.closest("a")) menu.open = false; });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+      });
+      document.addEventListener("click", (e) => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+    })();
+  </script>
+  {{- partial "analytics.html" . }}
+</body>
+</html>

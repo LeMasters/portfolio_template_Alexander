@@ -1,0 +1,65 @@
+{{ define "main" }}
+{{- $sections := partialCached "sections.html" . "sections" -}}
+{{- $has := dict -}}
+{{- range $sections }}{{ with .id }}{{ $has = merge $has (dict . true) }}{{ end }}{{ end -}}
+{{ partial "masthead.html" . }}
+
+<main id="main">
+  {{- if $has.projects }}
+  {{- /*
+    Projects, by kind (the Kind field), each kind in Order:
+      Case studies  each one wide, at the top
+      Projects      without case studies, laid out by how many there are:
+                      1   one wide
+                      2   two side by side
+                      3   one wide, then two side by side
+                      4+  one wide, then rows of three, filling from the left
+                    after case studies, all in rows (two across for 1 or 2, else three)
+      Briefs        one line each, in a list at the end
+  */ -}}
+  {{- $g := partialCached "project-groups.html" . "project-groups" -}}
+  {{- $wide := $g.studies -}}
+  {{- $rest := $g.projects -}}
+  {{- if and (not $wide) (ne (len $rest) 2) }}{{ $wide = first 1 $rest }}{{ $rest = after 1 $rest }}{{ end -}}
+  {{- $columns := cond (le (len $rest) 2) 2 3 -}}
+  <section id="projects" class="wrap projects" aria-labelledby="projects-h">
+    <h2 id="projects-h" class="section__title">Projects</h2>
+    {{- range $i, $p := $wide }}
+    {{ partial "project-card.html" (dict "page" $p "size" "wide" "eager" (eq $i 0)) }}
+    {{- end }}
+
+    {{- with $rest }}
+    <div class="projects__row projects__row--{{ $columns }}">
+      {{- range $i, $p := . }}
+      {{ partial "project-card.html" (dict "page" $p "size" "small" "columns" $columns "eager" (and (not $wide) (lt $i 2))) }}
+      {{- end }}
+    </div>
+    {{- end }}
+
+    {{- with $g.briefs }}
+    <div class="briefs">
+      {{- if or $wide $rest }}
+      <h3 class="briefs__title">More projects</h3>
+      {{- end }}
+      <ul class="briefs__list">
+        {{- range . }}
+        <li class="brief">
+          <a class="brief__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{- with .Params.caption }}<span class="brief__sub">{{ . }}</span>{{ end }}
+          {{- with .Params.year }}<span class="brief__year">{{ . }}</span>{{ end }}
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+    {{- end }}
+  </section>
+  {{- end }}
+
+  {{- if $has.gallery }}{{ partial "section-gallery.html" . }}{{ end }}
+  {{- if $has.experience }}{{ partial "section-experience.html" . }}{{ end }}
+  {{- if $has.education }}{{ partial "section-education.html" . }}{{ end }}
+  {{- if $has.tools }}{{ partial "section-tools.html" . }}{{ end }}
+  {{- if $has.about }}{{ partial "section-about.html" . }}{{ end }}
+  {{- if $has.contact }}{{ partial "section-contact.html" . }}{{ end }}
+</main>
+{{ end }}

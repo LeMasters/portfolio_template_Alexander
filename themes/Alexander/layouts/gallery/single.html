@@ -1,0 +1,21 @@
+{{ define "main" }}
+{{- /* One gallery image: shown whole (not cropped), with its title and caption. */ -}}
+{{ partial "masthead.html" . }}
+<main id="main" class="wrap gallery-item">
+  <p class="gallery-item__back"><a href="{{ (site.GetPage "/gallery").RelPermalink }}">← Gallery</a></p>
+  <figure class="gallery-item__figure">
+    <div class="gallery-item__frame">
+      {{ partial "img.html" (dict
+          "src" .Params.image
+          "alt" (.Params.alt | default .Title)
+          "eager" true
+          "sizes" "(min-width: 74rem) 69rem, 94vw") }}
+    </div>
+    <figcaption class="gallery-item__caption">
+      <h1 class="gallery-item__title">{{ .Title }}</h1>
+      {{- with .Content }}<div class="gallery-item__text">{{ . }}</div>{{ end }}
+    </figcaption>
+  </figure>
+  {{ partial "pager.html" (dict "page" . "pages" (partial "gallery-items.html" .) "label" "More images") }}
+</main>
+{{ end }}

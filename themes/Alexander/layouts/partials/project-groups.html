@@ -1,0 +1,21 @@
+{{- /*
+  The student's projects grouped by kind, each group in Order (weight):
+    studies   case studies
+    projects  projects
+    briefs    briefs
+    all       studies, then projects, then briefs: the home-page order, used for
+              previous/next links, the All projects page and the sharing image.
+  Usage: {{ $g := partialCached "project-groups.html" . "project-groups" }}
+*/ -}}
+{{- $studies := slice -}}
+{{- $projects := slice -}}
+{{- $briefs := slice -}}
+{{- range (where site.RegularPages "Section" "projects").ByWeight -}}
+  {{- $k := partial "project-kind.html" . -}}
+  {{- if eq $k "case-study" }}{{ $studies = $studies | append . }}
+  {{- else if eq $k "brief" }}{{ $briefs = $briefs | append . }}
+  {{- else }}{{ $projects = $projects | append . }}{{ end -}}
+{{- end -}}
+{{- $all := slice -}}
+{{- range (slice $studies $projects $briefs) }}{{ range . }}{{ $all = $all | append . }}{{ end }}{{ end -}}
+{{- return dict "studies" $studies "projects" $projects "briefs" $briefs "all" $all -}}

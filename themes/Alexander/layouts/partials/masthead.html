@@ -1,0 +1,25 @@
+{{- /*
+  The sticky header on every page: the student's name in large letters, the section
+  menu (small type), and their area of expertise. On wide screens the name is set on two
+  rows (partials/name-lines.html) with the menu beside it, aligned to its top; on narrow
+  screens the rows run together on one line, beside the Menu button.
+  On the home page the name is the page's main heading; elsewhere it links back home.
+*/ -}}
+{{- $home := site.Home -}}
+{{- $name := $home.Params.name | default "Your Name" -}}
+{{- $lines := partial "name-lines.html" $name -}}
+{{- $rows := slice -}}
+{{- range $lines }}{{ $rows = $rows | append (printf `<span class="masthead__name-row">%s</span>` (. | htmlEscape)) }}{{ end -}}
+{{- $nameHTML := delimit $rows " " | safeHTML -}}
+{{- $hasNav := gt (len (partialCached "sections.html" . "sections")) 0 -}}
+<header class="masthead{{ if $hasNav }} masthead--has-nav{{ end }}">
+  <div class="wrap">
+    {{ partial "nav.html" . }}
+    {{- if .IsHome }}
+    <h1 class="masthead__name">{{ $nameHTML }}</h1>
+    {{- else }}
+    <p class="masthead__name"><a href="{{ $home.RelPermalink }}">{{ $nameHTML }}</a></p>
+    {{- end }}
+    {{- with $home.Params.expertise }}<p class="masthead__expertise">{{ . }}</p>{{ end }}
+  </div>
+</header>

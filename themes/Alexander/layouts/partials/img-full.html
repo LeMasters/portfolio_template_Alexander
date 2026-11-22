@@ -1,0 +1,28 @@
+{{- /*
+  The address of an image's largest published copy (the same file img.html makes:
+  WebP, the widest of 480/800/1200/1600/2000 px not wider than the original, or the
+  original's own width if it is narrower than 480). Used where a link must lead to
+  the whole picture: the Sections pictures, when script is off.
+  GIF, SVG and outside addresses: the address as given (through url.html).
+  Usage: {{ partial "img-full.html" .image }}
+*/ -}}
+{{- $src := trim (string .) " " -}}
+{{- $out := "" -}}
+{{- $r := false -}}
+{{- if and $src (not (findRE `^(?i)(https?:)?//` $src)) -}}
+  {{- $r = resources.Get (strings.TrimPrefix "/" $src) -}}
+{{- end -}}
+{{- if and $r (eq $r.ResourceType "image") (in (slice "jpeg" "png" "webp") $r.MediaType.SubType) -}}
+  {{- if eq $r.MediaType.SubType "jpeg" }}{{ $r = $r.Filter images.AutoOrient }}{{ end -}}
+  {{- $w := 0 -}}
+  {{- range slice 480 800 1200 1600 2000 }}{{ if le . $r.Width }}{{ $w = . }}{{ end }}{{ end -}}
+  {{- if eq $w 0 }}{{ $w = $r.Width }}{{ end -}}
+  {{- $v := $r.Resize (printf "%dx webp" $w) -}}
+  {{- $v = resources.Copy (printf "%s-%dw.webp" (partial "img-name.html" $r) $v.Width) $v -}}
+  {{- $out = $v.RelPermalink -}}
+{{- else if $r -}}
+  {{- $out = $r.RelPermalink -}}
+{{- else -}}
+  {{- $out = partial "url.html" $src -}}
+{{- end -}}
+{{- return $out -}}

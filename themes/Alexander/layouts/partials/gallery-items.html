@@ -1,0 +1,8 @@
+{{- /* Gallery entries that have an image, in Order (weight); entries without an Order come last. */ -}}
+{{- $items := slice -}}
+{{- range (where site.RegularPages "Section" "gallery").ByWeight -}}
+  {{- if trim (string .Params.image) " " -}}
+    {{- $items = $items | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $items -}}

@@ -1,0 +1,14 @@
+{{- /*
+  Readable name for published image copies. Takes an image resource; returns its
+  folder and base name (no extension) with each run of characters other than
+  letters, digits, "-" and "_" replaced by one underscore, trimmed of underscores
+  at either end. Letter case is kept.
+    images/Catbug cartoon still.png  →  images/Catbug_cartoon_still
+    images/Level (final) #2.jpg      →  images/Level_final_2
+  Callers add the size and extension (img.html: -800w.webp; baseof.html: -share.jpg).
+  Two originals that clean to the same name (a.png and a.jpg, or "a b.png" and
+  a_b.png) would publish over each other; Hugo then keeps one of them.
+*/ -}}
+{{- $path := strings.TrimPrefix "/" .Name -}}
+{{- $clean := strings.Trim (replaceRE `[^A-Za-z0-9_-]+` "_" (path.BaseName $path)) "_" | default "image" -}}
+{{- return printf "%s/%s" (path.Dir $path) $clean -}}

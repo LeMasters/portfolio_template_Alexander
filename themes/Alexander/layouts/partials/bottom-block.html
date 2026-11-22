@@ -1,0 +1,26 @@
+{{- /*
+  The big block at the bottom of every page: name, area of expertise, and a compact
+  repeat of the contact links, so a visitor who scrolled to the end can reach out.
+  The small print ends with the month the site was last built ("Built November 2026"):
+  the date of the build, set on every publish, not of the last content change.
+*/ -}}
+{{- $home := site.Home -}}
+{{- $name := $home.Params.name | default "Your Name" -}}
+<footer class="bottom-block">
+  <div class="wrap">
+    <p class="bottom-block__name">{{ if .IsHome }}{{ $name }}{{ else }}<a href="{{ $home.RelPermalink }}">{{ $name }}</a>{{ end }}</p>
+    {{- with $home.Params.expertise }}<p class="bottom-block__expertise">{{ . }}</p>{{ end }}
+
+    {{- $links := where ($home.Params.links | default slice) "url" "!=" "" -}}
+    {{- if or $home.Params.email $home.Params.linkedin $home.Params.github $home.Params.resume $links }}
+    <ul class="bottom-block__contact" aria-label="Contact and links">
+      {{- with $home.Params.email }}<li><a href="mailto:{{ . }}">{{ . }}</a></li>{{ end }}
+      {{- with $home.Params.linkedin }}<li><a href="{{ partial "url.html" . }}" rel="me">LinkedIn</a></li>{{ end }}
+      {{- with $home.Params.github }}<li><a href="{{ partial "url.html" . }}" rel="me">GitHub</a></li>{{ end }}
+      {{- range $links }}<li><a href="{{ partial "url.html" .url }}" rel="me">{{ .label | default .url }}</a></li>{{ end }}
+      {{- with $home.Params.resume }}<li><a href="{{ partial "url.html" . }}">Résumé (PDF)</a></li>{{ end }}
+    </ul>
+    {{- end }}
+    <p class="bottom-block__small"><small>© {{ now.Year }} {{ $name }} · Built {{ now.Format "January 2006" }}</small></p>
+  </div>
+</footer>

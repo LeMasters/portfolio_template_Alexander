@@ -1,0 +1,56 @@
+{{- /*
+  One project: image, title, caption. The title is the link; a CSS overlay makes the
+  whole card clickable, so screen readers hear a short link ("Project One") rather
+  than the entire card read out as one long link.
+  Usage: {{ partial "project-card.html" (dict "page" $p "size" "wide" "level" 3) }}
+    size:    "wide" or "small"
+    columns: for small cards, 2 or 3 (how many share a row; sets the image sizes hint)
+    eager:   load the image at once
+  A case study's card is marked "Case study" before its title.
+    level:   heading level of the title (default 3, under the home page's
+             "Projects" heading; 2 on the All projects page)
+*/ -}}
+{{- $p := .page -}}
+{{- $h := printf "h%d" (.level | default 3) -}}
+{{- $wide := eq .size "wide" -}}
+{{- $eager := .eager | default false -}}
+{{- $sizes := "(min-width: 74rem) 69rem, 94vw" -}}
+{{- if not $wide -}}
+  {{- $sizes = cond (eq (.columns | default 3) 2)
+        "(min-width: 74rem) 34rem, (min-width: 22rem) 46vw, 94vw"
+        "(min-width: 74rem) 23rem, (min-width: 30rem) 31vw, 94vw" -}}
+{{- end -}}
+{{- /* Wide cards: an image squarer than 1.4:1 (4:3, square, portrait) is shown whole
+       on a tinted band instead of being cropped to the wide frame (about 2:1 to 2.6:1),
+       which would keep only a third to a half of its height. 3:2 and wider fill it. */ -}}
+{{- $whole := false -}}
+{{- if $wide -}}
+  {{- with $p.Params.image -}}
+    {{- $src := strings.TrimPrefix "/" (trim (string .) " ") -}}
+    {{- with resources.Get $src -}}
+      {{- if and (eq .ResourceType "image") (in (slice "jpeg" "png" "webp") .MediaType.SubType) -}}
+        {{- $i := . -}}
+        {{- if eq .MediaType.SubType "jpeg" }}{{ $i = .Filter images.AutoOrient }}{{ end -}}
+        {{- if lt (div (float $i.Width) $i.Height) 1.4 }}{{ $whole = true }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<article class="card card--{{ .size }}">
+  <div class="card__frame{{ if $whole }} card__frame--whole{{ end }}">
+    {{- with $p.Params.image }}
+    {{ partial "img.html" (dict
+        "src" .
+        "alt" ($p.Params.alt | default "")
+        "eager" $eager
+        "sizes" $sizes) }}
+    {{- else }}
+    <span class="card__noimage" aria-hidden="true">{{ $p.Title }}</span>
+    {{- end }}
+  </div>
+  <div class="card__caption">
+    {{- if eq (partial "project-kind.html" $p) "case-study" }}<span class="card__kind">Case study</span>{{ end }}
+    {{ printf "<%s class=\"card__title\">" $h | safeHTML }}<a class="card__link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ printf "</%s>" $h | safeHTML }}
+    {{- with $p.Params.caption }}<p class="card__sub">{{ . }}</p>{{ end }}
+  </div>
+</article>

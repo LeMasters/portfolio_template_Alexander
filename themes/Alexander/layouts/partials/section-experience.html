@@ -1,0 +1,40 @@
+{{- /*
+  Experience: one row per entry in content/experience/ (jobs, internships, assistantships),
+  laid out like Education: role, organization · location, dates at the right, optional detail.
+  - website: the organization's website; the organization's name links to it.
+             (Not "url": Hugo reserves that key for a page's own address.)
+  - project: chosen in Pages CMS from a dropdown of the student's projects, which stores
+             the project's file path (content/projects/x.md). Shown as a link to that
+             project's page. If the project has since been renamed or deleted, nothing
+             is shown (no broken link).
+*/ -}}
+<section id="experience" class="wrap section" aria-labelledby="experience-h">
+  <h2 id="experience-h" class="section__title">Experience</h2>
+  <ul class="entry-list">
+    {{- range partial "experience-entries.html" . }}
+    {{- $p := . -}}
+    {{- $related := false -}}
+    {{- with trim (string $p.Params.project) " " -}}
+      {{- $related = site.GetPage (strings.TrimSuffix ".md" (strings.TrimPrefix "content/" .)) -}}
+    {{- end }}
+    <li class="entry">
+      <div class="entry__main">
+        {{- with $p.Params.role }}<p class="entry__title">{{ . }}</p>{{ end }}
+        {{- $parts := slice -}}
+        {{- with $p.Params.organization -}}
+          {{- if $p.Params.website -}}
+            {{- $parts = $parts | append (printf `<a href="%s">%s</a>` (partial "url.html" $p.Params.website) (. | htmlEscape)) -}}
+          {{- else -}}
+            {{- $parts = $parts | append (. | htmlEscape) -}}
+          {{- end -}}
+        {{- end -}}
+        {{- with $p.Params.location }}{{ $parts = $parts | append (. | htmlEscape) }}{{ end -}}
+        {{- with $parts }}<p class="entry__sub">{{ delimit . " · " | safeHTML }}</p>{{ end }}
+        {{- with $p.Content }}<div class="entry__body">{{ . }}</div>{{ end }}
+        {{- with $related }}<p class="entry__related">Related project: <a href="{{ .RelPermalink }}">{{ .Title }}</a></p>{{ end }}
+      </div>
+      {{- with $p.Params.dates }}<p class="entry__date">{{ . }}</p>{{ end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>

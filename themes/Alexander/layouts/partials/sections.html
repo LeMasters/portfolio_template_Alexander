@@ -1,0 +1,61 @@
+{{- /*
+  The one place that decides which sections exist. Both the menu and the home page
+  use this list, so a menu button appears only when its section has content, and a
+  section with no content is never drawn.
+
+  Returns a slice of dicts, in menu order:
+    id       anchor on the home page (#projects) — empty for the others
+    label    menu text
+    page     for pages of their own (none at present; nav.html still supports it)
+    url      for outside links (LinkedIn, GitHub)
+
+  Usage: {{ $sections := partialCached "sections.html" . "sections" }}
+*/ -}}
+{{- $home := site.Home -}}
+{{- $out := slice -}}
+
+{{- /* Projects: any project file. */ -}}
+{{- if where site.RegularPages "Section" "projects" -}}
+  {{- $out = $out | append (dict "id" "projects" "label" "Projects") -}}
+{{- end -}}
+
+{{- /* Gallery: a home-page section (which links on to the full Gallery page), listed
+       when any entry has an image. */ -}}
+{{- with partial "gallery-items.html" . -}}
+  {{- $out = $out | append (dict "id" "gallery" "label" "Gallery") -}}
+{{- end -}}
+
+{{- /* Experience: any entry with a role or an organization filled in. */ -}}
+{{- with partial "experience-entries.html" . -}}
+  {{- $out = $out | append (dict "id" "experience" "label" "Experience") -}}
+{{- end -}}
+
+{{- /* Education: any entry with a degree or a school filled in. */ -}}
+{{- with partial "education-entries.html" . -}}
+  {{- $out = $out | append (dict "id" "education" "label" "Education") -}}
+{{- end -}}
+
+{{- /* Tools: any tool with a name. */ -}}
+{{- with where (site.Data.tools | default slice) "name" "!=" "" -}}
+  {{- $out = $out | append (dict "id" "tools" "label" "Tools") -}}
+{{- end -}}
+
+{{- /* About: the body of content/_index.md. */ -}}
+{{- if trim (string $home.RawContent) " \n\t" -}}
+  {{- $out = $out | append (dict "id" "about" "label" "About") -}}
+{{- end -}}
+
+{{- /* Contact: email, résumé, or any link with an address. */ -}}
+{{- if or $home.Params.email $home.Params.resume (where ($home.Params.links | default slice) "url" "!=" "") -}}
+  {{- $out = $out | append (dict "id" "contact" "label" "Contact") -}}
+{{- end -}}
+
+{{- /* LinkedIn and GitHub: outside links, not sections. */ -}}
+{{- with $home.Params.linkedin -}}
+  {{- $out = $out | append (dict "id" "" "label" "LinkedIn" "url" (partial "url.html" .)) -}}
+{{- end -}}
+{{- with $home.Params.github -}}
+  {{- $out = $out | append (dict "id" "" "label" "GitHub" "url" (partial "url.html" .)) -}}
+{{- end -}}
+
+{{- return $out -}}

@@ -1,0 +1,35 @@
+{{- $home := site.Home -}}
+{{- $set := site.Data.analytics | default dict -}}
+# robots.txt for {{ $home.Params.name | default "this portfolio" }}
+#
+# Crawlers read robots.txt only at the root of a host (https://host/robots.txt).
+# If this site lives in a subfolder (username.github.io/repository/), this file is
+# not read; the tags in every page's <head> make the same request.
+{{ if not $set.aiTraining }}
+# Please do not collect this site to train AI models. (Search, including AI
+# search and answer engines, is welcome below.) Each name is a crawler or control
+# token documented by its operator: OpenAI, Anthropic, Google (Gemini training),
+# Apple (Apple Intelligence training), Common Crawl, Meta, ByteDance, Amazon.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: meta-externalagent
+User-agent: Bytespider
+User-agent: Amazonbot
+Disallow: /
+{{ end }}
+# Everyone else, including search engines: welcome.
+User-agent: *
+Allow: /
+{{- if not $set.aiTraining }}
+# The same preference in two newer vocabularies:
+#   Content-Usage  IETF AI Preferences (aipref) working-group draft
+#   Content-Signal Cloudflare Content Signals Policy
+Content-Usage: train-ai=n, search=y
+Content-Signal: search=yes, ai-train=no
+{{- end }}
+
+Sitemap: {{ "sitemap.xml" | absURL }}

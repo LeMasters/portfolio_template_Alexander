@@ -1,0 +1,34 @@
+{{- /*
+  Gallery on the home page: square thumbnails, each with its title visible under it
+  (the link reads the alt text, if any, then the title; no title-as-alt fallback, so
+  the title is never read twice), then a "See the full gallery" card
+  leading to the Gallery page (where every image has its own page and caption).
+  Which images appear:
+    - those whose "Show on home page" box is ticked (home: true), in Order, however many;
+    - if none is ticked, the first five in Order, so the section (and the menu, which
+      points here) exists whenever the gallery has images.
+*/ -}}
+{{- $all := partial "gallery-items.html" . -}}
+{{- $shown := where $all "Params.home" true -}}
+{{- if not $shown }}{{ $shown = first 5 $all }}{{ end -}}
+<section id="gallery" class="wrap section" aria-labelledby="gallery-h">
+  <h2 id="gallery-h" class="section__title">Gallery</h2>
+  <ul class="gallery__grid gallery__grid--home">
+    {{- range $shown }}
+    <li class="gallery__item">
+      <a class="gallery__link" href="{{ .RelPermalink }}">
+        <span class="gallery__frame">
+          {{- partial "img.html" (dict
+              "src" .Params.image
+              "alt" .Params.alt
+              "sizes" "(min-width: 74rem) 17rem, (min-width: 40rem) 30vw, 46vw") -}}
+        </span>
+        <span class="gallery__title">{{ .Title }}</span>
+      </a>
+    </li>
+    {{- end }}
+    <li class="gallery__item">
+      <a class="gallery__more" href="{{ (site.GetPage "/gallery").RelPermalink }}">See the full gallery<span aria-hidden="true"> →</span></a>
+    </li>
+  </ul>
+</section>

@@ -1,0 +1,20 @@
+{{- /*
+  The student's name split into two rows of about equal length, for the header.
+  Breaks only between words; a one-word name stays one row. Returns a slice of strings.
+  Example: "Mary Ann de la Cruz" → ["Mary Ann", "de la Cruz"].
+*/ -}}
+{{- $name := trim (replaceRE `\s+` " " .) " " -}}
+{{- $words := split $name " " -}}
+{{- $lines := slice $name -}}
+{{- if gt (len $words) 1 -}}
+  {{- $total := strings.RuneCount $name -}}
+  {{- $best := 1 -}}
+  {{- $bestDiff := $total -}}
+  {{- range $i := seq 1 (sub (len $words) 1) -}}
+    {{- $left := strings.RuneCount (delimit (first $i $words) " ") -}}
+    {{- $diff := math.Abs (sub (sub $total $left 1) $left) -}}
+    {{- if lt $diff $bestDiff }}{{ $best = $i }}{{ $bestDiff = $diff }}{{ end -}}
+  {{- end -}}
+  {{- $lines = slice (delimit (first $best $words) " ") (delimit (after $best $words) " ") -}}
+{{- end -}}
+{{- return $lines -}}

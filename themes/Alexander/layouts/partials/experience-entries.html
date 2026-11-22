@@ -1,0 +1,10 @@
+{{- /* Experience entries that have a role or an organization, in Order (weight); entries without an Order come last. */ -}}
+{{- $entries := slice -}}
+{{- with site.GetPage "/experience" -}}
+  {{- range .Pages.ByWeight -}}
+    {{- if or (trim (string .Params.role) " ") (trim (string .Params.organization) " ") -}}
+      {{- $entries = $entries | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $entries -}}

@@ -1,0 +1,6 @@
+{{- /*
+  Headings typed in Markdown. A heading set as "Heading 1" in the Pages CMS editor
+  becomes an <h2>: the page title is the page's only <h1>. Other levels are kept.
+*/ -}}
+{{- $level := cond (lt .Level 2) 2 .Level -}}
+<h{{ $level }} id="{{ .Anchor }}">{{ .Text }}</h{{ $level }}>

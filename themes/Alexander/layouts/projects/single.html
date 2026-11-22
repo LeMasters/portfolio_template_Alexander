@@ -1,0 +1,120 @@
+{{ define "main" }}
+{{- /*
+  A project's page. The Kind field (partials/project-kind.html) chooses the layout:
+    project     title, year · role, caption and description in a box outlined in the
+                accent colour; link buttons, tags; the image; then the Sections
+    case-study  a long read, in one column: "Case study" label; title, caption and the
+                description, together in a box outlined in the accent colour; the title
+                again, before the Sections; then an at-a-glance panel (role, year, tags, links, and
+                a contents list when the description and sections have three or more
+                headings), then the image
+    brief       a narrower column, smaller title: title, year · role, caption, image,
+                description, link buttons, tags. No Sections, even if the file has some.
+  Case studies and projects then show their Sections, if any
+  (partials/project-sections.html): picture and text side by side, swapping sides.
+  The outlined box is .study__intro for both (case study and project).
+*/ -}}
+{{- $kind := partial "project-kind.html" . -}}
+{{- $boxed := in (slice "case-study" "project") $kind -}}
+{{- $g := partialCached "project-groups.html" . "project-groups" -}}
+{{- $links := where (.Params.links | default slice) "url" "!=" "" -}}
+{{- $sizes := cond (eq $kind "brief") "(min-width: 48rem) 44rem, 94vw" "(min-width: 74rem) 69rem, 94vw" -}}
+{{ partial "masthead.html" . }}
+
+<main id="main" class="wrap project project--{{ $kind }}">
+  <article>
+    {{- if eq $kind "case-study" }}<p class="project__kind study__kind">Case study</p>{{ end }}
+    <header class="project__head{{ if $boxed }} study__intro{{ end }}">
+      <h1 class="project__title">{{ .Title }}</h1>
+      {{- if ne $kind "case-study" }}
+      {{- $meta := slice -}}
+      {{- with .Params.year }}{{ $meta = $meta | append . }}{{ end -}}
+      {{- with .Params.role }}{{ $meta = $meta | append . }}{{ end -}}
+      {{- with $meta }}<p class="project__meta">{{ delimit . " · " }}</p>{{ end }}
+      {{- end }}
+      {{- with .Params.caption }}<p class="project__caption">{{ . }}</p>{{ end }}
+      {{- if $boxed }}{{ with .Content }}<div class="project__body study__body">{{ . }}</div>{{ end }}{{ end }}
+    </header>
+
+    {{- if eq $kind "case-study" }}
+    {{- /* Contents: the description's second-level headings, then the sections'
+           headings, if there are three or more in all. */ -}}
+    {{- $toc := slice -}}
+    {{- range findRESubmatch `<h2 id="([^"]+)">(.*?)</h2>` (string .Content) }}
+      {{- $toc = $toc | append (dict "id" (index . 1) "text" (index . 2)) -}}
+    {{- end -}}
+    {{- range (.Params.sections | default slice) }}
+      {{- if and .heading (or .image .text) }}{{ $toc = $toc | append (dict "id" (printf "section-%s" (anchorize .heading)) "text" .heading) }}{{ end -}}
+    {{- end -}}
+    <div class="study">
+      <aside class="study__glance" aria-label="At a glance">
+        {{- if or .Params.role .Params.year .Params.tags }}
+        <dl class="study__facts">
+          {{- with .Params.role }}<div><dt>Role</dt><dd>{{ . }}</dd></div>{{ end }}
+          {{- with .Params.year }}<div><dt>Year</dt><dd>{{ . }}</dd></div>{{ end }}
+          {{- with .Params.tags }}<div><dt>Tags</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+        </dl>
+        {{- end }}
+        {{- with $links }}
+        <ul class="project__links">
+          {{- range . }}<li><a class="button" href="{{ partial "url.html" .url }}">{{ .label | default "View project" }}</a></li>{{ end }}
+        </ul>
+        {{- end }}
+        {{- if ge (len $toc) 3 }}
+        <nav class="study__contents" aria-label="Contents">
+          <p class="study__contents-title">Contents</p>
+          <ol>
+            {{- range $toc }}<li><a href="#{{ .id }}">{{ .text | plainify | safeHTML }}</a></li>{{ end }}
+          </ol>
+        </nav>
+        {{- end }}
+      </aside>
+    </div>
+    {{- with .Params.image }}
+    <figure class="project__image">
+      {{ partial "img.html" (dict "src" . "alt" ($.Params.alt | default "") "sizes" $sizes) }}
+    </figure>
+    {{- end }}
+    {{- /* The title again, leading into the Sections (when any are shown). A
+           visual repeat: hidden from screen readers, which already have the h1. */ -}}
+    {{- $shown := false -}}
+    {{- range (.Params.sections | default slice) }}{{ if or .image .text }}{{ $shown = true }}{{ end }}{{ end -}}
+    {{- if $shown }}
+    <p class="study__retitle" aria-hidden="true">{{ .Title }}</p>
+    {{- end }}
+
+    {{- else }}
+    {{- if eq $kind "brief" }}
+    {{- with .Params.image }}
+    <figure class="project__image">
+      {{ partial "img.html" (dict "src" . "alt" ($.Params.alt | default "") "eager" true "sizes" $sizes) }}
+    </figure>
+    {{- end }}
+    {{- with .Content }}<div class="project__body">{{ . }}</div>{{ end }}
+    {{- end }}
+    {{- with $links }}
+    <ul class="project__links">
+      {{- range . }}<li><a class="button" href="{{ partial "url.html" .url }}">{{ .label | default "View project" }}</a></li>{{ end }}
+    </ul>
+    {{- end }}
+    {{- with .Params.tags }}
+    <ul class="project__tags" aria-label="Tags">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+    {{- end }}
+    {{- if eq $kind "project" }}
+    {{- with .Params.image }}
+    <figure class="project__image">
+      {{ partial "img.html" (dict "src" . "alt" ($.Params.alt | default "") "eager" true "sizes" $sizes) }}
+    </figure>
+    {{- end }}
+    {{- end }}
+    {{- end }}
+
+    {{- if ne $kind "brief" }}
+    {{ partial "project-sections.html" (dict "page" . "kind" $kind) }}
+    {{- end }}
+  </article>
+
+  {{- /* Previous / next project, in the same order as the home page. */}}
+  {{ partial "pager.html" (dict "page" . "pages" $g.all "label" "More projects") }}
+</main>
+{{ end }}

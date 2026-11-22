@@ -1,0 +1,16 @@
+{{- /* Education: one row per entry in content/education/. */ -}}
+<section id="education" class="wrap section" aria-labelledby="education-h">
+  <h2 id="education-h" class="section__title">Education</h2>
+  <ul class="entry-list">
+    {{- range partial "education-entries.html" . }}
+    <li class="entry">
+      <div class="entry__main">
+        {{- with .Params.degree }}<p class="entry__title">{{ . }}</p>{{ end }}
+        {{- with .Params.school }}<p class="entry__sub">{{ . }}</p>{{ end }}
+        {{- with .Content }}<div class="entry__body">{{ . }}</div>{{ end }}
+      </div>
+      {{- with .Params.year }}<p class="entry__date">{{ . }}</p>{{ end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>

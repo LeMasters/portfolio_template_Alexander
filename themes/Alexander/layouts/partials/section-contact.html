@@ -1,0 +1,10 @@
+{{- /* Contact: email, other links, résumé — from content/_index.md. */ -}}
+{{- $home := site.Home -}}
+<section id="contact" class="wrap section" aria-labelledby="contact-h">
+  <h2 id="contact-h" class="section__title">Contact</h2>
+  <ul class="contact__list">
+    {{- with $home.Params.email }}<li><a href="mailto:{{ . }}">{{ . }}</a></li>{{ end }}
+    {{- range where ($home.Params.links | default slice) "url" "!=" "" }}<li><a href="{{ partial "url.html" .url }}" rel="me">{{ .label | default .url }}</a></li>{{ end }}
+    {{- with $home.Params.resume }}<li><a class="button" href="{{ partial "url.html" . }}">Résumé (PDF)</a></li>{{ end }}
+  </ul>
+</section>

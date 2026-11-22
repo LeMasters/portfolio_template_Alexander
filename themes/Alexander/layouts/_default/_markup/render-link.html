@@ -1,0 +1,4 @@
+{{- /* Links inside Markdown text get the same repair as link fields (missing https://, subfolder paths). */ -}}
+{{- $u := partial "url.html" .Destination -}}
+<a href="{{ $u }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- /* no trailing whitespace */ -}}

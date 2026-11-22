@@ -1,0 +1,12 @@
+{{- /* Tools: the list in data/tools.yaml (name, optional note). */ -}}
+<section id="tools" class="wrap section" aria-labelledby="tools-h">
+  <h2 id="tools-h" class="section__title">Tools</h2>
+  <ul class="tools">
+    {{- range where site.Data.tools "name" "!=" "" }}
+    <li class="tool">
+      <span class="tool__name">{{ .name }}</span>
+      {{- with .note }}<span class="tool__note">{{ . }}</span>{{ end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>

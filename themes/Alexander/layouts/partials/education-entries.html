@@ -1,0 +1,10 @@
+{{- /* Education entries that have a degree or a school, in Order (weight); entries without an Order come last. */ -}}
+{{- $entries := slice -}}
+{{- with site.GetPage "/education" -}}
+  {{- range .Pages.ByWeight -}}
+    {{- if or (trim (string .Params.degree) " ") (trim (string .Params.school) " ") -}}
+      {{- $entries = $entries | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $entries -}}
