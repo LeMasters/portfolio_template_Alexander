@@ -1,9 +1,11 @@
 {{ define "main" }}
 {{- /*
   A project's page. The Kind field (partials/project-kind.html) chooses the layout:
+  Every kind starts with its label, "Case study", "Project" or "Brief"
+  (partials/project-kind-label.html; for projects and briefs since 0.6.6), then:
     project     title, year · role, caption and description in a box outlined in the
                 accent colour; link buttons, tags; the image; then the Sections
-    case-study  a long read, in one column: "Case study" label; title, caption and the
+    case-study  a long read, in one column: title, caption and the
                 description, together in a box outlined in the accent colour; the title
                 again, before the Sections; then an at-a-glance panel (role, year, tags, links, and
                 a contents list when the description and sections have three or more
@@ -23,7 +25,7 @@
 
 <main id="main" class="wrap project project--{{ $kind }}">
   <article>
-    {{- if eq $kind "case-study" }}<p class="project__kind study__kind">Case study</p>{{ end }}
+    <p class="project__kind{{ if eq $kind "case-study" }} study__kind{{ end }}">{{ partial "project-kind-label.html" . }}</p>
     <header class="project__head{{ if $boxed }} study__intro{{ end }}">
       <h1 class="project__title">{{ .Title }}</h1>
       {{- if ne $kind "case-study" }}
@@ -115,6 +117,6 @@
   </article>
 
   {{- /* Previous / next project, in the same order as the home page. */}}
-  {{ partial "pager.html" (dict "page" . "pages" $g.all "label" "More projects") }}
+  {{ partial "pager.html" (dict "page" . "pages" $g.all "label" "More selected work") }}
 </main>
 {{ end }}

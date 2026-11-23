@@ -1,0 +1,8 @@
+{{- /*
+  The label for a work's kind (0.6.6): "Case study", "Project" or "Brief", from the
+  Kind field (partials/project-kind.html). Shown before the title on home-page
+  cards and brief lines, and above the title on the work's own page.
+  Usage: {{ partial "project-kind-label.html" $page }}
+*/ -}}
+{{- $k := partial "project-kind.html" . -}}
+{{- return index (dict "case-study" "Case study" "project" "Project" "brief" "Brief") $k -}}

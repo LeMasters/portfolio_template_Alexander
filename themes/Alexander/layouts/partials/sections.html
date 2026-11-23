@@ -14,9 +14,9 @@
 {{- $home := site.Home -}}
 {{- $out := slice -}}
 
-{{- /* Projects: any project file. */ -}}
+{{- /* Selected Work ("Projects" until 0.6.5): any file in content/projects. */ -}}
 {{- if where site.RegularPages "Section" "projects" -}}
-  {{- $out = $out | append (dict "id" "projects" "label" "Projects") -}}
+  {{- $out = $out | append (dict "id" "projects" "label" "Selected Work") -}}
 {{- end -}}
 
 {{- /* Gallery: a home-page section (which links on to the full Gallery page), listed

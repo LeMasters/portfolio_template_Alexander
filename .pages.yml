@@ -4,11 +4,13 @@
 # Eight forms:
 #   Profile     content/_index.md        name, expertise, email, LinkedIn, GitHub, links, résumé,
 #                                        body = About
-#   Projects    content/projects/*.md    one file per project; body = description
+#   Selected Work  content/projects/*.md  one file per entry (case study, project or brief);
+#                                        body = description. Labelled "Projects" until 0.6.6;
+#                                        the folder and field names are unchanged
 #   Gallery     content/gallery/*.md     one file per image; body = caption;
 #                                        home = show on the home page
 #   Experience  content/experience/*.md  one file per job; body = optional detail;
-#                                        project = dropdown of the student's projects
+#                                        project = dropdown of the Selected Work entries
 #   Education   content/education/*.md   one file per degree; body = optional detail
 #   Tools       data/tools.yaml          a list: tool name + optional note
 #   Appearance  data/style.yaml          colour scheme; typeface for text and for titles
@@ -78,7 +80,7 @@ content:
             type: string
 
   - name: projects
-    label: Projects
+    label: Selected Work
     type: collection
     path: content/projects
     format: yaml-frontmatter
@@ -92,14 +94,14 @@ content:
         order: asc
     fields:
       - name: title
-        label: Project title
+        label: Title
         type: string
         required: true
       - name: projectKind
         label: Kind
         type: select
         default: project
-        description: "Case study: your fullest projects, told as a story. A full-width card at the top of the home page and a long page. Project: a standard card and page. Brief: one line in a list on the home page and a short page. You can change this at any time without losing anything."
+        description: "Case study: your fullest work, told as a story. A full-width card at the top of Selected Work and a long page. Project: a standard card and page. Brief: one line in a list at the end of Selected Work and a short page. The kind is shown as a small label before the title. You can change it at any time without losing anything."
         options:
           values:
             - name: case-study
@@ -113,13 +115,13 @@ content:
         type: string
         description: One line under the image, e.g. "Puzzle game · Unity · solo".
       - name: body
-        label: Project description
+        label: Description
         type: rich-text
-        description: "The text of the project's own page. For a case study, keep this to a short opening and tell the story in Sections, below. For a brief, two or three sentences are enough."
+        description: "The text of its own page. For a case study, keep this to a short opening and tell the story in Sections, below. For a brief, two or three sentences are enough."
       - name: image
         label: Image
         type: image
-        description: "1800 × 1200 (3:2), under about 400 KB. On the home page, a wide card shows only about the middle 60% of a 3:2 image's height, so keep titles, HUD and faces away from the top and bottom edges. Squarer images (4:3, square, portrait) are shown whole there, on a tinted band. The project's own page always shows the whole image."
+        description: "1800 × 1200 (3:2), under about 400 KB. On the home page, a wide card shows only about the middle 60% of a 3:2 image's height, so keep titles, HUD and faces away from the top and bottom edges. Squarer images (4:3, square, portrait) are shown whole there, on a tinted band. Its own page always shows the whole image."
         options:
           media: images
       - name: alt
@@ -164,7 +166,7 @@ content:
             - heading: Iteration
             - heading: Outcome
             - heading: Reflection
-        description: "Each section is a picture beside a block of text, shown after the description; the picture swaps sides with every section, and on phones they stack. A new project starts with seven suggested headings. Fill in the ones that fit, in any order (drag to reorder); rename, repeat or delete them. A section with neither a picture nor text doesn't appear. Case studies and projects only: a brief's page doesn't show Sections."
+        description: "Each section is a picture beside a block of text, shown after the description; the picture swaps sides with every section, and on phones they stack. A new entry starts with seven suggested headings. Fill in the ones that fit, in any order (drag to reorder); rename, repeat or delete them. A section with neither a picture nor text doesn't appear. Case studies and projects only: a brief's page doesn't show Sections."
         fields:
           - name: heading
             label: Heading
@@ -276,9 +278,9 @@ content:
         type: rich-text
         description: One to three sentences, ideally with a result you can point to.
       - name: project
-        label: Related project (optional)
+        label: Related work (optional)
         type: reference
-        description: Choose one of your projects to link to it from this entry.
+        description: Choose an entry from your Selected Work to link to it from this job.
         options:
           collection: projects
           label: "{title}"
@@ -372,7 +374,7 @@ content:
       - name: titles
         label: Typeface for titles
         type: select
-        description: Your name, project titles, and the name at the bottom of the page.
+        description: Your name, the titles of your work, and the name at the bottom of the page.
         options:
           values:
             - name: fraunces

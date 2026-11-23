@@ -6,9 +6,10 @@
     size:    "wide" or "small"
     columns: for small cards, 2 or 3 (how many share a row; sets the image sizes hint)
     eager:   load the image at once
-  A case study's card is marked "Case study" before its title.
+  Every card is marked with its kind ("Case study", "Project", or "Brief" on the
+  All projects page) before its title (partials/project-kind-label.html).
     level:   heading level of the title (default 3, under the home page's
-             "Projects" heading; 2 on the All projects page)
+             "Selected Work" heading; 2 on the All projects page)
 */ -}}
 {{- $p := .page -}}
 {{- $h := printf "h%d" (.level | default 3) -}}
@@ -49,7 +50,7 @@
     {{- end }}
   </div>
   <div class="card__caption">
-    {{- if eq (partial "project-kind.html" $p) "case-study" }}<span class="card__kind">Case study</span>{{ end }}
+    <span class="card__kind">{{ partial "project-kind-label.html" $p }}</span>
     {{ printf "<%s class=\"card__title\">" $h | safeHTML }}<a class="card__link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ printf "</%s>" $h | safeHTML }}
     {{- with $p.Params.caption }}<p class="card__sub">{{ . }}</p>{{ end }}
   </div>

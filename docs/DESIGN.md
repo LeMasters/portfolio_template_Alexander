@@ -1,6 +1,6 @@
 # Alexander — design and maintenance guide
 
-Version 0.6.5 · 22 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
+Version 0.6.6 · 23 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
 
 *In the starter template (`AlexanderTemplate`), the maintainer files this guide mentions, `CLAUDE.md` and the test scripts in `dev/`, are left out. They are kept in the maintainer's copy.*
 
@@ -54,6 +54,7 @@ Contents
 | Form order and labels (0.6.0): Profile (About and Résumé under Area of expertise; "Custom Links"); Projects in page order; "Alt text" | **On GitHub** (22 Nov); `dev/check_content.py` passes. Profile order checked by Garrison in Pages CMS |
 | Gallery titles (0.6.2): visible title under each thumbnail, inside the link; link name = alt text, then title; empty alt read as the title once; titles clamp to two lines; "See the full gallery" tile square and level | **Tested locally** (390 and 1440 px; a build with every alt removed) and **on GitHub** (22 Nov build). Looked at on the live site: **not yet** |
 | Wide cards (0.6.3): an image squarer than 1.4:1 shown whole on a tinted band; 3:2 and wider still fill the frame; form hint and README describe the crop | **Tested locally** (portrait sample at 390 and 1440 px; a build with a 3:2 image keeps the crop; `dev/check_site.py` passes) and **on GitHub** (22 Nov build). Looked at on the live site: **not yet** |
+| Selected Work (0.6.6): the projects section, its menu item, the Pages CMS form and the All projects page named "Selected Work"; every card, brief line and project page labelled with its kind ("Case study", "Project", "Brief"); the briefs list no longer headed "More projects" | **Tested locally** (23 Nov): Anne Southwell's and Robert Herrick's content built on 0.6.6 without warnings, every label and heading checked in the output; screenshots at 1440 and 390 px; the empty starter builds and shows no Selected Work section; `.pages.yml` parses. `dev/check_site.py` and `dev/check_content.py` **not run** (the maintainer folder was not connected). Not yet on GitHub or in Pages CMS |
 | Other browsers (Safari, Firefox), real phones | **Not yet tested** |
 
 **0.5.0 (21 Nov)** added project kinds, larger section labels, picture-and-text Sections and an eighth form, Analytics. **0.6.0 (22 Nov) closes this series**: the case-study page reworked in one column (outlined intro box, the title repeated before the Sections); Sections pictures shrunk whole to their text's height, rules between sections, and a click opening each section in a dialog; seven suggested section headings; forms reordered to follow the page; "Alt text" labels. Snapshot: `DrPhill-0.6.0.zip` (template with sample content). Carried forward: the Experience dropdown's position in the form and a workaround for its behaviour (section 11); the Analytics form and the suggested headings confirmed in Pages CMS; real phones, Safari and Firefox (the section dialog included); neutral sample content and the student-path rehearsal before the template goes to students. Open: whether to limit the number of case studies; a crop anchor for wide cards, in reserve since 0.6.3 (section 11).
@@ -61,6 +62,8 @@ Contents
 **0.6.1–0.6.4 (22 Nov)**, after the series closed: project pages in the outlined box and briefs without Sections; "Built Month Year" in the small print; the rename to Alexander; visible titles under gallery thumbnails; squarer images shown whole on wide cards; a consistency pass on the docs, with every typography value and the dialog backdrop moved into CSS settings (no visible change). Snapshots: `Alexander-0.6.1.zip` and the empty `Alexander-template-0.6.1.zip`; at 0.6.4, `AlexanderTemplate.zip` (22 Nov): the bare starter for faculty review (no content; keeps `docs/`, leaves out `dev/` and `CLAUDE.md`; README adds setup steps), published by Garrison as the template repository `LeMasters/portfolio_template_Alexander` (22 Nov). From then on that repository is the only copy of the theme; the demo repository `portfolio_DrPhill02` is retired, and the maintainer files (`dev/`, `CLAUDE.md`) are kept outside it.
 
 **0.6.5 (22 Nov)**: the home page's small print names the template and its version ("Template: Alexander 0.6.5"), read from `theme.toml`, so a reviewer can tell which version a site was made from. Two more typefaces, Figtree (sans-serif) and Literata (serif), bring the Appearance choices to six.
+
+**0.6.6 (23 Nov)**: "Projects" renamed **Selected Work** wherever a student or visitor sees it (home-page heading, menu, Pages CMS form, All projects page, README); the folder `content/projects`, the field names and the `/projects/` addresses are unchanged, so existing copies keep working. Every piece of work now carries its kind as a small label before its title (cards and brief lines) and above it (its own page): "Case study", "Project" or "Brief". Until 0.6.5 only case studies were labelled. Raised by Garrison.
 
 Student guides written alongside 0.2.0 (Claude Docs): *Your Portfolio, Search Engines and AI*; *How to Set Up Your Own Domain Name* (Cloudflare); *Guidelines for Setting Up Your First Portfolio*.
 
@@ -173,7 +176,7 @@ Alexander/                                  ← one repository per student (copi
 │       ├── _default/_markup/render-heading.html          headings in Markdown: "Heading 1" → <h2>
 │       ├── index.html                    home page: projects, then sections
 │       ├── projects/single.html          a project's page, laid out by its kind
-│       ├── projects/list.html            All projects page (exists, not linked from the home page since 0.2.0)
+│       ├── projects/list.html            All projects page, titled "Selected Work" (exists, not linked from the home page since 0.2.0)
 │       ├── gallery/list.html             Gallery page: square thumbnails with titles
 │       ├── gallery/single.html           one image, whole, with title and caption
 │       ├── robots.txt                    AI-training opt-out + sitemap address (published as /robots.txt)
@@ -186,6 +189,7 @@ Alexander/                                  ← one repository per student (copi
 │           ├── project-sections.html     a project's Sections: picture and text rows, alternating sides; each opens in a dialog
 │           ├── img-full.html             address of an image's largest published copy (a Sections picture's link without script)
 │           ├── project-kind.html         a project's kind: case-study, project or brief
+│           ├── project-kind-label.html   its label: "Case study", "Project" or "Brief" (0.6.6)
 │           ├── project-groups.html       projects grouped by kind, in home-page order
 │           ├── gallery-items.html        gallery entries that have an image, in order
 │           ├── section-gallery.html      home-page Gallery section: chosen thumbnails + "See the full gallery" card
@@ -230,12 +234,12 @@ The design reads these files and fields. A future theme can replace `themes/Alex
 | `resume` | file path | `files/…pdf`; Contact section button |
 | *body* | Markdown | The About section; empty = no About section |
 
-### `content/projects/<slug>.md` (Projects form; one file per project)
+### `content/projects/<slug>.md` (Selected Work form, "Projects" until 0.6.5; one file per entry)
 
 | Field | Type | Notes |
 |---|---|---|
 | `title` | string, required | Card title, page title |
-| `projectKind` | `case-study`, `project` or `brief` | Form label "Kind"; default `project` (also when empty or unrecognised). Chooses the home-page card and the page layout (section 5). Not `kind`: Hugo reserves that key |
+| `projectKind` | `case-study`, `project` or `brief` | Form label "Kind"; default `project` (also when empty or unrecognised). Chooses the home-page card and the page layout (section 5), and the label shown with the title ("Case study", "Project", "Brief"; `partials/project-kind-label.html`, 0.6.6). Not `kind`: Hugo reserves that key |
 | `caption` | string | One line under the card image and page title |
 | `weight` | number | Order, 1 first. Layout by count: see section 5 |
 | `image` | path | `images/…`; 1800 × 1200 (3:2) recommended. On a wide card an image squarer than 1.4:1 is shown whole on a tinted band (0.6.3); 3:2 and wider are cropped to the frame |
@@ -310,8 +314,8 @@ A list of `{name, note}`. Items without a `name` are skipped.
 **Home page** (`index.html`), top to bottom:
 
 1. **Header** (`masthead.html`, sticky): name (the page's `<h1>`), section menu (`nav.html`), area of expertise. Wide screens (header 640 px and up): the name on two rows at the left, the menu at the right level with the top of the name, the expertise line across the full width below. Narrow screens: the name on one line, with the Menu button beside it.
-2. **Projects**, under a visible "Projects" label, grouped by kind (`project-groups.html`), each kind in Order:
-   - **Case studies**: each a wide card, at the top, marked "Case study" before its title.
+2. **Selected Work** ("Projects" until 0.6.5), under a visible "Selected Work" label, grouped by kind (`project-groups.html`), each kind in Order. Every card and brief line shows its kind before its title ("Case study", "Project", "Brief"; since 0.6.6, before which only case studies were marked); on small cards the label sits on its own line above the title:
+   - **Case studies**: each a wide card, at the top.
    - **Projects**: with no case studies, laid out by how many there are:
 
      | Projects | Layout | Row class |
@@ -322,17 +326,17 @@ A list of `{name, note}`. Items without a `name` are skipped.
      | 4 or more | One wide, then rows of three; a part-filled last row lines up from the left | `projects__row--3` |
 
      After one or more case studies, all projects go in rows: two across for one or two projects, three across for more.
-   - **Briefs**: one line each (title, caption, year), in a list at the end of the section, headed "More projects" when cards come before it. The whole line is the link.
+   - **Briefs**: one line each (title, caption, year), in a list at the end of the section, each marked "Brief" (until 0.6.5 the list was headed "More projects" when cards came before it). The whole line is the link.
 
    The template (`index.html`) decides which case applies and writes the row class; the CSS only says how many columns each class has. On narrow screens rows of three become one column (below about 480 px of projects area); pairs stay side by side down to about 350 px. Only the first wide card's image loads at once (`fetchpriority="high"`); with no wide card, the first two in the row do.
 3. **Gallery** (`section-gallery.html`): the images ticked "Show on home page", in Order, as many as are ticked (the first five if none is ticked), as square thumbnails with their titles under them, then a "See the full gallery →" tile linking to the Gallery page.
 4. **Experience**, **Education**, **Tools**, **About**, **Contact**, each only if it has content.
 5. **Bottom block** (`bottom-block.html`): name, expertise, contact links, copyright, build month; on the home page also "Template: Alexander <version>".
 
-**One source of truth for sections.** `partials/sections.html` returns the list of sections that have content, in menu order: Projects, Gallery, Experience, Education, Tools, About, Contact, then LinkedIn and GitHub (outside links, not sections). `nav.html` draws a button for each; `index.html` draws a section for each. A menu button can therefore never point to an empty or missing section. The site is rebuilt on every save, so the menu always matches the content.
+**One source of truth for sections.** `partials/sections.html` returns the list of sections that have content, in menu order: Selected Work, Gallery, Experience, Education, Tools, About, Contact, then LinkedIn and GitHub (outside links, not sections). `nav.html` draws a button for each; `index.html` draws a section for each. A menu button can therefore never point to an empty or missing section. The site is rebuilt on every save, so the menu always matches the content.
 
-**Project page** (`projects/single.html`), by kind. All three: header (name links home; menu links go to `home#section`), previous/next project in home-page order (case studies, projects, briefs), bottom block.
-- **Project** (since 0.6.1): title, year · role, caption and description in the outlined box (as a case study's, without its label); link buttons, tags; full image (uncropped); the Sections. No contents list or repeated title.
+**Project page** (`projects/single.html`), by kind. All three: header (name links home; menu links go to `home#section`), the kind label above the title (all three since 0.6.6), previous/next project in home-page order (case studies, projects, briefs), bottom block.
+- **Project** (since 0.6.1): title, year · role, caption and description in the outlined box (as a case study's); link buttons, tags; full image (uncropped); the Sections. No contents list or repeated title.
 - **Case study** (one reading column, 40 rem, since 0.5.0): "Case study" label; title, caption and the description (set slightly larger), together in a box outlined in the accent colour; then the at-a-glance panel (role, year and tags in a row, link buttons, and a numbered contents list when the description's second-level headings and the Sections' headings number three or more); then the full image, if any; then the title again (when Sections are shown); then the Sections. Until 0.5.0 the panel sat in a 13 rem column at the left of the description, sticky on wide screens; changed at Garrison's request so the description follows the caption.
 - **Brief**: a narrower left-aligned column (44 rem), smaller title: title, year · role, caption, image, description, link buttons, tags. No outlined box and, since 0.6.1, no Sections.
 
@@ -340,7 +344,7 @@ A list of `{name, note}`. Items without a `name` are skipped.
 
 **Gallery image page** (`gallery/single.html`): "← Gallery" link, the whole image (uncropped, at most 80% of the screen's height, centred on a tinted panel), title, caption, previous/next image (`pager.html`, shared with project pages), bottom block.
 
-**All projects page** (`projects/list.html`): every project as a card, in home-page order. Since 0.2.0 the home page shows every project, so nothing links here; Hugo still builds it at `/projects/`.
+**All projects page** (`projects/list.html`, titled "Selected Work" since 0.6.6): every project as a card, in home-page order. Since 0.2.0 the home page shows every project, so nothing links here; Hugo still builds it at `/projects/`.
 
 **Every image** goes through `img.html`; every student-typed link goes through `url.html`, including images and links written inside Markdown (render hooks).
 
@@ -648,6 +652,14 @@ Tested locally (project and brief pages with sections; `dev/check_site.py` passe
 3. Tools form: the Note hint now says a note is general (how long, how much, what kind of work, e.g. "C#; three years" or "used on two team projects") and is shown under the tool on the home page; evidence from one project belongs in that project's Sections. Raised by a persona fill (22 Nov), where a note copied from one project read as a general claim about the tool. README forms table updated.
 4. Version bumped to 0.6.5 (`theme.toml`, README prototype note, this guide).
 Tested locally: empty starter and a filled site build without warnings; the line appears on the home page only and wraps cleanly at 390 px; a build with `theme.toml` removed omits it; both new typefaces load and render as text and as titles (Figtree text with Literata titles, and the reverse) at 1440 and 390 px; `.pages.yml` parses; `dev/check_content.py` and `dev/check_site.py` pass. Built on GitHub in the two persona repositories made from the template (`portfolio_johndonne`, `portfolio_robertherrick`, updated to 0.6.5 on 22 Nov): both builds green, and the live home pages show the template line. The template repository itself has GitHub Pages turned off by choice, so its own Actions runs stop at `configure-pages`. The new Appearance options and the Tools hint are not yet checked in Pages CMS.
+
+23 November 2026 — version 0.6.6 (Selected Work):
+1. "Projects" renamed **Selected Work** wherever students and visitors see it: the home-page section heading (`index.html`), the menu item (`sections.html`), the Pages CMS collection label, the All projects page's title (`projects/list.html`), the README, and the previous/next landmark name on project pages ("More selected work"). Kept unchanged so that existing copies and their links keep working: the folder `content/projects`, the collection and field names in `.pages.yml`, the `projectKind` values, the `/projects/` addresses and the `#projects` anchor. Raised by Garrison.
+2. Kind labels on every piece of work: a new partial, `project-kind-label.html`, gives "Case study", "Project" or "Brief". Cards show it before the title (`project-card.html`; only case studies did before), brief lines before the title in the list (`index.html`, `.brief__title` / `.brief__kind`), and every project page above the title (`projects/single.html`; the case study's label keeps its larger `.study__kind` style). On small cards the label sits on its own line above the title.
+3. The briefs list loses its "More projects" sub-heading (each line is now marked "Brief"); its CSS rule (`.briefs__title`) removed.
+4. Selected Work form labels: "Project title" → "Title", "Project description" → "Description"; the Kind hint mentions the label and Selected Work; the image, Sections and Appearance hints no longer say "project" where they mean any piece of work. Experience form: "Related project" → "Related work". Field names unchanged, so no stored content changes.
+5. Version bumped to 0.6.6 (`theme.toml`, README prototype note, this guide).
+Tested locally: Anne Southwell's content (one case study, two projects, four briefs) and Robert Herrick's (one case study, one project) built on 0.6.6 with Hugo 0.147.0 at a subfolder address, without warnings; every card, brief line and project page carries the right label; heading, menu and All projects page read "Selected Work"; no "More projects" left; the empty starter builds and shows no Selected Work section; `.pages.yml` parses. Screenshots at 1440 and 390 px. One side effect: "Selected Work" is longer than "Projects", so a menu of seven items (Anne's) now wraps to a second row at 1440 and 1280 px, as it already did at 1024 px; the header's height is unchanged (the two-row name is taller), and the feature caption stays above the fold. Not run: `dev/check_site.py` and `dev/check_content.py` (maintainer folder not connected). Not yet built on GitHub or used in Pages CMS.
 
 ---
 

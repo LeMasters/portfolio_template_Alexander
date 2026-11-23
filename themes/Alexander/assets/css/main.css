@@ -641,8 +641,10 @@ a {
   display: block;
 }
 
-/* A label before a case study's title (cards) and above it (its page). */
+/* A work's kind ("Case study", "Project", "Brief"; 0.6.6): before its title on
+   cards and brief lines, above it on its own page. */
 .card__kind,
+.brief__kind,
 .project__kind {
   font-size: var(--text-xs);
   font-weight: var(--weight-bold);
@@ -651,7 +653,8 @@ a {
   color: var(--color-accent);
 }
 
-.card__kind {
+.card__kind,
+.brief__kind {
   margin-inline-end: 0.6em;
 }
 
@@ -665,15 +668,6 @@ a {
    Wide: title and caption at the left, year at the right. */
 .briefs {
   margin-block-start: var(--space-l);
-}
-
-.briefs__title {
-  margin: 0 0 var(--space-xs);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
 }
 
 .briefs__list {

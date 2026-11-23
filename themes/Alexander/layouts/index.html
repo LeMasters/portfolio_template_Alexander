@@ -7,7 +7,8 @@
 <main id="main">
   {{- if $has.projects }}
   {{- /*
-    Projects, by kind (the Kind field), each kind in Order:
+    Selected Work (the Projects form; "Projects" until 0.6.5), by kind (the Kind
+    field), each kind in Order. Every card and brief line is marked with its kind:
       Case studies  each one wide, at the top
       Projects      without case studies, laid out by how many there are:
                       1   one wide
@@ -23,7 +24,7 @@
   {{- if and (not $wide) (ne (len $rest) 2) }}{{ $wide = first 1 $rest }}{{ $rest = after 1 $rest }}{{ end -}}
   {{- $columns := cond (le (len $rest) 2) 2 3 -}}
   <section id="projects" class="wrap projects" aria-labelledby="projects-h">
-    <h2 id="projects-h" class="section__title">Projects</h2>
+    <h2 id="projects-h" class="section__title">Selected Work</h2>
     {{- range $i, $p := $wide }}
     {{ partial "project-card.html" (dict "page" $p "size" "wide" "eager" (eq $i 0)) }}
     {{- end }}
@@ -38,13 +39,10 @@
 
     {{- with $g.briefs }}
     <div class="briefs">
-      {{- if or $wide $rest }}
-      <h3 class="briefs__title">More projects</h3>
-      {{- end }}
       <ul class="briefs__list">
         {{- range . }}
         <li class="brief">
-          <a class="brief__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <span class="brief__title"><span class="brief__kind">{{ partial "project-kind-label.html" . }}</span><a class="brief__link" href="{{ .RelPermalink }}">{{ .Title }}</a></span>
           {{- with .Params.caption }}<span class="brief__sub">{{ . }}</span>{{ end }}
           {{- with .Params.year }}<span class="brief__year">{{ . }}</span>{{ end }}
         </li>

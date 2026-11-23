@@ -4,7 +4,7 @@ A plain, fast portfolio site. You edit it in **Pages CMS**; **GitHub** builds it
 
 You never need to install anything or touch code. Everything you write is kept in ordinary text files that you own and can take to any other site.
 
-> **Prototype, version 0.6.5 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
+> **Prototype, version 0.6.6 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
 
 ## Starting a new site from this template
 
@@ -25,9 +25,9 @@ Open [app.pagescms.org](https://app.pagescms.org), choose this repository, and u
 | Form | What it holds | Leave it empty and… |
 |---|---|---|
 | **Profile** | Your name, area of expertise, your About paragraph, résumé (PDF), email, LinkedIn and GitHub addresses, and Custom Links (your other sites) | …the About section, Contact section, LinkedIn button or GitHub button disappears |
-| **Projects** | One entry per project: title, kind (case study, project or brief), caption, description, image and its alt text, year, role, links, tags, sections (case studies and projects only: a picture beside text, swapping sides on each row; a new project starts with seven suggested headings, Problem to Reflection, which you fill, reorder, rename or delete), order | …there are no projects on the page |
+| **Selected Work** | One entry per piece of work: title, kind (case study, project or brief; shown as a small label before the title), caption, description, image and its alt text, year, role, links, tags, sections (case studies and projects only: a picture beside text, swapping sides on each row; a new entry starts with seven suggested headings, Problem to Reflection, which you fill, reorder, rename or delete), order | …the Selected Work section disappears |
 | **Gallery** | One entry per image: title, image, whether to show it on the home page, alt text, order, caption | …the Gallery section, the Gallery page and the menu link disappear |
-| **Experience** | One entry per job, internship or assistantship: role, organization (and its website), location, dates, order, what you did, and a related project chosen from a list of your projects | …the Experience section disappears |
+| **Experience** | One entry per job, internship or assistantship: role, organization (and its website), location, dates, order, what you did, and related work chosen from a list of your Selected Work | …the Experience section disappears |
 | **Education** | One entry per degree or certificate: degree, school, year, order, optional detail | …the Education section disappears |
 | **Tools** | The software and tools you use, each with an optional note that stays general (how long, how much, what kind of work: "C#; three years"), never about one project | …the Tools section disappears |
 | **Appearance** | Colour scheme (Ink or Dusk), typeface for text, typeface for titles | (defaults are used: Ink, Atkinson, Fraunces) |
@@ -40,24 +40,24 @@ Each save publishes the site again within a minute or two. The menu at the top l
 ### What happens when you save
 
 1. Pages CMS saves your words and images into your repository on GitHub (it records every version, so nothing is lost).
-2. GitHub notices the change and runs **Hugo**, a program that turns your files into a finished website. Hugo makes smaller copies of your images for phones and laptops, builds a page for each project and gallery image, and adds the details search engines and link previews need.
+2. GitHub notices the change and runs **Hugo**, a program that turns your files into a finished website. Hugo makes smaller copies of your images for phones and laptops, builds a page for each piece of work and gallery image, and adds the details search engines and link previews need.
 3. GitHub Pages publishes the result.
 
 Nothing runs on your site itself; it is plain web pages, which is why it's fast. The full details are in `docs/DESIGN.md`, section 2.
 
-### Projects: kinds and layout
+### Selected Work: kinds and layout
 
-Each project has a **Kind**:
+Each entry in Selected Work has a **Kind**, shown as a small label ("Case study", "Project" or "Brief") before its title on the home page and above the title on its own page:
 
 | Kind | On the home page | Its own page |
 |---|---|---|
-| **Case study** | A full-width card at the top, marked "Case study" | A long read: your title, caption and description in an outlined box; role, year, tags and links, with a contents list when you use three or more headings; the image; then your Sections |
+| **Case study** | A full-width card at the top | A long read: your title, caption and description in an outlined box; role, year, tags and links, with a contents list when you use three or more headings; the image; then your Sections |
 | **Project** (the usual choice) | A card, laid out as below | Title, caption and description in an outlined box; links and tags; the image; then your Sections |
-| **Brief** | One line in a list at the end of Projects | A short page: title, image, description, links, tags (no Sections) |
+| **Brief** | One line in a list at the end of Selected Work | A short page: title, image, description, links, tags (no Sections) |
 
-For a case study, keep the description to a short opening and tell the story in **Sections**: each is a picture beside a paragraph or two. A new project starts with seven suggested headings (*Problem · My role · Research · Prototype · Iteration · Outcome · Reflection*); fill the ones that fit and rename, reorder or delete the rest. A section with neither picture nor text doesn't appear. You can change a project's kind at any time; nothing you've written is lost.
+For a case study, keep the description to a short opening and tell the story in **Sections**: each is a picture beside a paragraph or two. A new entry starts with seven suggested headings (*Problem · My role · Research · Prototype · Iteration · Outcome · Reflection*); fill the ones that fit and rename, reorder or delete the rest. A section with neither picture nor text doesn't appear. You can change an entry's kind at any time; nothing you've written is lost.
 
-Within each kind, projects appear in **Order** (1 first). Without any case studies, the layout adjusts to how many projects you have:
+Within each kind, entries appear in **Order** (1 first). Without any case studies, the layout adjusts to how many projects (kind **Project**) you have:
 
 | Projects | Layout |
 |---|---|
@@ -70,7 +70,7 @@ With case studies, the case studies are the wide ones, and all your projects go 
 
 ### Images
 
-Upload images through the Projects form. Recommended: **1800 × 1200 px (3:2), under about 400 KB**. The site makes smaller copies for phones automatically, with tidy names: spaces and unusual characters become underscores (`My level 2.png` → `My_level_2-800w.webp`). Your original keeps its name in the repository. On the home page, a wide card shows only about the middle 60% of a 3:2 image's height, so keep titles, HUD and faces away from the top and bottom edges. Squarer images (4:3, square or portrait) are shown whole there instead, on a tinted band. The project's own page always shows the whole image.
+Upload images through the Selected Work form. Recommended: **1800 × 1200 px (3:2), under about 400 KB**. The site makes smaller copies for phones automatically, with tidy names: spaces and unusual characters become underscores (`My level 2.png` → `My_level_2-800w.webp`). Your original keeps its name in the repository. On the home page, a wide card shows only about the middle 60% of a 3:2 image's height, so keep titles, HUD and faces away from the top and bottom edges. Squarer images (4:3, square or portrait) are shown whole there instead, on a tinted band. The project's own page always shows the whole image.
 
 Gallery images can be any shape. Your home page has a Gallery section: tick **Show on home page** for each image you want there (as many as you like; they appear in Order). If you tick none, the first five appear. The section ends with a link to the full Gallery page, which shows every image as a square crop with its title under it; clicking one opens its own page with the whole image, its title and your caption, and links to the previous and next image. Up to 2000 px on the long side, under about 500 KB.
 
@@ -78,7 +78,7 @@ Always fill in **Alt text** ("alternative text"): one sentence saying what the i
 
 ### Experience
 
-List jobs, internships and assistantships, most recent first (**Order** 1). If an entry relates to one of your projects (the tool you built during an internship, say), choose it under **Related project**: the entry then links to that project's page. If you later delete or rename the project, the link simply disappears; choose again.
+List jobs, internships and assistantships, most recent first (**Order** 1). If a job relates to an entry in your Selected Work (the tool you built during an internship, say), choose it under **Related work**: the job then links to that entry's page. If you later delete or rename the entry, the link simply disappears; choose again.
 
 ### Links
 
@@ -90,7 +90,7 @@ By default your site asks AI companies not to use it to train their models. It d
 
 These are requests: reputable companies honour them, but nothing technical can force a crawler to comply. A `robots.txt` file only works when the site is at the top of its web address (`your-username.github.io` or your own domain), not in a subfolder; the page tags work everywhere.
 
-To help people find you in search: write a clear area of expertise and project captions, describe every image, link to your portfolio from LinkedIn, itch.io and anywhere else you are, and (optionally) add your site to Google Search Console and paste its verification code into the **Analytics** form.
+To help people find you in search: write a clear area of expertise and captions for your work, describe every image, link to your portfolio from LinkedIn, itch.io and anywhere else you are, and (optionally) add your site to Google Search Console and paste its verification code into the **Analytics** form.
 
 ### Visitor statistics (optional)
 
@@ -131,7 +131,7 @@ The small print at the very bottom of your home page ends with the template's na
 | File | What it is |
 |---|---|
 | `content/_index.md` | Your profile; the text below the `---` lines is your About paragraph |
-| `content/projects/*.md` | One file per project |
+| `content/projects/*.md` | One file per entry in Selected Work (the folder keeps its earlier name, so existing sites and links still work) |
 | `content/gallery/*.md` | One file per gallery image; the text below the `---` lines is its caption |
 | `content/experience/*.md` | One file per job, internship or assistantship |
 | `content/education/*.md` | One file per degree or certificate |
