@@ -4,7 +4,7 @@ A plain, fast portfolio site. You edit it in **Pages CMS**; **GitHub** builds it
 
 You never need to install anything or touch code. Everything you write is kept in ordinary text files that you own and can take to any other site.
 
-> **Prototype, version 0.6.4 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
+> **Prototype, version 0.6.5 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
 
 ## Starting a new site from this template
 
@@ -29,7 +29,7 @@ Open [app.pagescms.org](https://app.pagescms.org), choose this repository, and u
 | **Gallery** | One entry per image: title, image, whether to show it on the home page, alt text, order, caption | …the Gallery section, the Gallery page and the menu link disappear |
 | **Experience** | One entry per job, internship or assistantship: role, organization (and its website), location, dates, order, what you did, and a related project chosen from a list of your projects | …the Experience section disappears |
 | **Education** | One entry per degree or certificate: degree, school, year, order, optional detail | …the Education section disappears |
-| **Tools** | The software and tools you use, each with an optional note | …the Tools section disappears |
+| **Tools** | The software and tools you use, each with an optional note that stays general (how long, how much, what kind of work: "C#; three years"), never about one project | …the Tools section disappears |
 | **Appearance** | Colour scheme (Ink or Dusk), typeface for text, typeface for titles | (defaults are used: Ink, Atkinson, Fraunces) |
 | **Analytics** | Visitor statistics (a service, GoatCounter or Cloudflare, and its code); whether AI companies may train on your site (off unless you turn it on); an optional Google Search Console code | (no visitor statistics; AI training stays refused) |
 
@@ -122,6 +122,10 @@ Your site can count its visitors using one of two free services. Neither uses co
 
 Your site starts at `https://your-username.github.io/your-repository/`. You can give it an address of your own (such as `janedoe.com`, about $11 a year): see the separate guide *How to Set Up Your Own Domain Name*. Nothing in your content changes; the site picks up its new address on the next publish.
 
+### Which template made your site
+
+The small print at the very bottom of your home page ends with the template's name and version, e.g. "Template: Alexander 0.6.5". It tells your instructors which version of the template your site was made from. It changes only if the template files in `themes/Alexander/` are updated.
+
 ## Where your content lives
 
 | File | What it is |
@@ -150,7 +154,7 @@ These are plain Markdown and YAML files. To move your portfolio somewhere else, 
 
 ## Typefaces
 
-Four open-source typefaces are included and served from your own site (no requests to Google or any other company). Choose one for text and one for titles in **Appearance**:
+Six open-source typefaces are included and served from your own site (no requests to Google or any other company). Choose one for text and one for titles in **Appearance**:
 
 | Choice | Designer | Kind |
 |---|---|---|
@@ -158,8 +162,10 @@ Four open-source typefaces are included and served from your own site (no reques
 | Inter | Rasmus Andersson | Sans-serif, neutral |
 | Source Serif 4 | Frank Grießhammer / Adobe | Serif, classic |
 | Fraunces (default for titles) | Undercase Type | Serif, expressive |
+| Figtree | Erik Kennedy | Sans-serif, friendly |
+| Literata | TypeTogether, for Google | Serif, made for long reading |
 
-All four are licensed under the SIL Open Font License 1.1; each licence is in its folder under `themes/Alexander/static/fonts/`.
+All six are licensed under the SIL Open Font License 1.1; each licence is in its folder under `themes/Alexander/static/fonts/`.
 
 ## Credits
 

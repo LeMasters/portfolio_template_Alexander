@@ -1,0 +1,14 @@
+{{- /*
+  The template this site was made from: name and version, read from the theme's own
+  theme.toml (the one place the version is kept). Returns a dict with "name" and
+  "version"; both empty if the file is missing or unreadable, so nothing is shown.
+  Usage: {{ $t := partialCached "theme-info.html" . "theme-info" }}
+*/ -}}
+{{- $out := dict "name" "" "version" "" -}}
+{{- $path := "themes/Alexander/theme.toml" -}}
+{{- if fileExists $path -}}
+  {{- with os.ReadFile $path | transform.Unmarshal (dict "format" "toml") -}}
+    {{- $out = dict "name" (string (.name | default "")) "version" (string (.version | default "")) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

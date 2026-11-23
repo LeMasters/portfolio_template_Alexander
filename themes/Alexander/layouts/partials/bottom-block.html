@@ -3,6 +3,9 @@
   repeat of the contact links, so a visitor who scrolled to the end can reach out.
   The small print ends with the month the site was last built ("Built November 2026"):
   the date of the build, set on every publish, not of the last content change.
+  On the home page it then names the template and its version ("Alexander 0.6.5"),
+  read from themes/Alexander/theme.toml (partials/theme-info.html), so a reviewer can
+  tell which version of the template a site was made from.
 */ -}}
 {{- $home := site.Home -}}
 {{- $name := $home.Params.name | default "Your Name" -}}
@@ -21,6 +24,11 @@
       {{- with $home.Params.resume }}<li><a href="{{ partial "url.html" . }}">Résumé (PDF)</a></li>{{ end }}
     </ul>
     {{- end }}
-    <p class="bottom-block__small"><small>© {{ now.Year }} {{ $name }} · Built {{ now.Format "January 2006" }}</small></p>
+    {{- $template := "" -}}
+    {{- if .IsHome -}}
+      {{- $t := partialCached "theme-info.html" . "theme-info" -}}
+      {{- with $t.name }}{{ $template = printf " · Template: %s" (printf "%s %s" . $t.version | strings.TrimSpace) }}{{ end -}}
+    {{- end }}
+    <p class="bottom-block__small"><small>© {{ now.Year }} {{ $name }} · Built {{ now.Format "January 2006" }}{{ $template }}</small></p>
   </div>
 </footer>

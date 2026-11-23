@@ -1,6 +1,6 @@
 # Alexander — design and maintenance guide
 
-Version 0.6.4 · snapshot of 22 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
+Version 0.6.5 · 22 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
 
 *In the starter template (`AlexanderTemplate`), the maintainer files this guide mentions, `CLAUDE.md` and the test scripts in `dev/`, are left out. They are kept in the maintainer's copy.*
 
@@ -34,7 +34,7 @@ Contents
 | Project layout for 1, 2, 3, 4, 5 and 7 projects, at laptop and phone widths | **Tested locally** (0.2.0) |
 | AI opt-out tags and robots.txt (on and off), structured data, sitemap | **Tested locally** (0.2.0): output checked; JSON-LD parses |
 | Colour schemes (both) | **Tested locally** (0.2.0): contrast of every pairing (`dev/check_palettes.py`); each scheme built and rendered in Chrome |
-| Typeface choice (four pairings and an invalid value) | **Tested locally** |
+| Typeface choice (four pairings and an invalid value; 0.6.5: Figtree and Literata as text and as titles) | **Tested locally** |
 | Font regeneration (`dev/build_fonts.py`) | **Tested**: reproduces the shipped font files exactly |
 | GitHub Actions build and deploy | **Tested on GitHub** (21 Nov, demo repository `LeMasters/portfolio_DrPhill02`): builds and publishes within a minute or two of a save |
 | Gallery: page, image pages, menu link only with content, phone and laptop widths | **Tested locally** (0.2.0) |
@@ -58,7 +58,9 @@ Contents
 
 **0.5.0 (21 Nov)** added project kinds, larger section labels, picture-and-text Sections and an eighth form, Analytics. **0.6.0 (22 Nov) closes this series**: the case-study page reworked in one column (outlined intro box, the title repeated before the Sections); Sections pictures shrunk whole to their text's height, rules between sections, and a click opening each section in a dialog; seven suggested section headings; forms reordered to follow the page; "Alt text" labels. Snapshot: `DrPhill-0.6.0.zip` (template with sample content). Carried forward: the Experience dropdown's position in the form and a workaround for its behaviour (section 11); the Analytics form and the suggested headings confirmed in Pages CMS; real phones, Safari and Firefox (the section dialog included); neutral sample content and the student-path rehearsal before the template goes to students. Open: whether to limit the number of case studies; a crop anchor for wide cards, in reserve since 0.6.3 (section 11).
 
-**0.6.1–0.6.4 (22 Nov)**, after the series closed: project pages in the outlined box and briefs without Sections; "Built Month Year" in the small print; the rename to Alexander; visible titles under gallery thumbnails; squarer images shown whole on wide cards; a consistency pass on the docs, with every typography value and the dialog backdrop moved into CSS settings (no visible change). Snapshots: `Alexander-0.6.1.zip` and the empty `Alexander-template-0.6.1.zip`; at 0.6.4, `AlexanderTemplate.zip` (22 Nov): the bare starter for faculty review (no content; keeps `docs/`, leaves out `dev/` and `CLAUDE.md`; README adds setup steps), built locally, not yet on GitHub.
+**0.6.1–0.6.4 (22 Nov)**, after the series closed: project pages in the outlined box and briefs without Sections; "Built Month Year" in the small print; the rename to Alexander; visible titles under gallery thumbnails; squarer images shown whole on wide cards; a consistency pass on the docs, with every typography value and the dialog backdrop moved into CSS settings (no visible change). Snapshots: `Alexander-0.6.1.zip` and the empty `Alexander-template-0.6.1.zip`; at 0.6.4, `AlexanderTemplate.zip` (22 Nov): the bare starter for faculty review (no content; keeps `docs/`, leaves out `dev/` and `CLAUDE.md`; README adds setup steps), published by Garrison as the template repository `LeMasters/portfolio_template_Alexander` (22 Nov). From then on that repository is the only copy of the theme; the demo repository `portfolio_DrPhill02` is retired, and the maintainer files (`dev/`, `CLAUDE.md`) are kept outside it.
+
+**0.6.5 (22 Nov)**: the home page's small print names the template and its version ("Template: Alexander 0.6.5"), read from `theme.toml`, so a reviewer can tell which version a site was made from. Two more typefaces, Figtree (sans-serif) and Literata (serif), bring the Appearance choices to six.
 
 Student guides written alongside 0.2.0 (Claude Docs): *Your Portfolio, Search Engines and AI*; *How to Set Up Your Own Domain Name* (Cloudflare); *Guidelines for Setting Up Your First Portfolio*.
 
@@ -157,11 +159,11 @@ Alexander/                                  ← one repository per student (copi
 │   └── files/                            résumé etc.
 │
 ├── themes/Alexander/                       ── DESIGN (the same for every student) ──
-│   ├── theme.toml, LICENSE               name, version, MIT licence (fonts excluded)
+│   ├── theme.toml, LICENSE               name, version (shown on the home page), MIT licence (fonts excluded)
 │   ├── assets/css/
 │   │   ├── main.css                      all styles; numbered contents; settings in section 1
 │   │   └── fonts.css                     @font-face rules (generated by dev/build_fonts.py)
-│   ├── static/fonts/<key>/               WOFF2 files + OFL.txt for atkinson, inter, source-serif, fraunces
+│   ├── static/fonts/<key>/               WOFF2 files + OFL.txt for atkinson, inter, figtree, source-serif, fraunces, literata
 │   └── layouts/
 │       ├── _default/baseof.html          page shell: <head>, typeface choice, CSS, skip link, script
 │       ├── _default/single.html, list.html               fallback pages
@@ -191,7 +193,8 @@ Alexander/                                  ← one repository per student (copi
 │           ├── section-experience.html, section-education.html, section-tools.html, section-about.html, section-contact.html
 │           ├── experience-entries.html   experience entries that have content, in order
 │           ├── education-entries.html    education entries that have content, in order
-│           ├── bottom-block.html         closing block: name, expertise, contact links
+│           ├── bottom-block.html         closing block: name, expertise, contact links; small print with build month and, on the home page, the template and version
+│           ├── theme-info.html           the template's name and version, read from theme.toml
 │           ├── analytics.html            optional GoatCounter or Cloudflare script (Analytics form)
 │           ├── img.html                  ★ every image: WebP srcset, sizes, width/height, lazy
 │           ├── img-name.html             readable names for published image copies
@@ -324,7 +327,7 @@ A list of `{name, note}`. Items without a `name` are skipped.
    The template (`index.html`) decides which case applies and writes the row class; the CSS only says how many columns each class has. On narrow screens rows of three become one column (below about 480 px of projects area); pairs stay side by side down to about 350 px. Only the first wide card's image loads at once (`fetchpriority="high"`); with no wide card, the first two in the row do.
 3. **Gallery** (`section-gallery.html`): the images ticked "Show on home page", in Order, as many as are ticked (the first five if none is ticked), as square thumbnails with their titles under them, then a "See the full gallery →" tile linking to the Gallery page.
 4. **Experience**, **Education**, **Tools**, **About**, **Contact**, each only if it has content.
-5. **Bottom block** (`bottom-block.html`): name, expertise, contact links, copyright.
+5. **Bottom block** (`bottom-block.html`): name, expertise, contact links, copyright, build month; on the home page also "Template: Alexander <version>".
 
 **One source of truth for sections.** `partials/sections.html` returns the list of sections that have content, in menu order: Projects, Gallery, Experience, Education, Tools, About, Contact, then LinkedIn and GitHub (outside links, not sections). `nav.html` draws a button for each; `index.html` draws a section for each. A menu button can therefore never point to an empty or missing section. The site is rebuilt on every save, so the menu always matches the content.
 
@@ -395,8 +398,8 @@ Hugo names resized copies after the original plus a hash code (`Catbug%20cartoon
 **Experience as its own section, with a project chosen from a dropdown** (0.3.0).
 A fourth-year student's jobs, internships and assistantships had nowhere to go: the Education form has no place for them, and a project entry is the wrong shape. Experience follows the Education pattern (one Markdown file per entry, no pages of their own, shown only when filled in), placed after Projects because it is usually the stronger evidence of the two. An entry can point to a related project through Pages CMS's `reference` field: the student picks from a list of their projects by title, so a mistyped address is impossible, and the file stores the project's path, which the template turns into a link. If the project is later renamed or deleted, the link is left out rather than broken. Set aside: a free-text link field (students would type addresses that break when a project is renamed) and making experience entries a kind of project (they have no image and need no page).
 
-**Four self-hosted typefaces, two serif and two sans-serif.**
-Consistent appearance across devices without requests to Google or any other company. Variable WOFF2 files, Latin and Latin Extended (names like Łukasz or Dvořák display correctly), about 100–150 KB per page. Chosen for range: Atkinson Hyperlegible Next (legibility), Inter (neutral), Source Serif 4 (classic text serif), Fraunces (expressive display serif). Set aside: system font stacks (no download, but they look different on each device) and Google Fonts (outside requests).
+**Six self-hosted typefaces, three serif and three sans-serif** (four until 0.6.5).
+Consistent appearance across devices without requests to Google or any other company. Variable WOFF2 files, Latin and Latin Extended (names like Łukasz or Dvořák display correctly), about 100–150 KB per page. Chosen for range: Atkinson Hyperlegible Next (legibility), Inter (neutral), Source Serif 4 (classic text serif), Fraunces (expressive display serif); added in 0.6.5, Figtree (friendly geometric sans) and Literata (serif designed for long reading on screens). Set aside: system font stacks (no download, but they look different on each device) and Google Fonts (outside requests).
 
 **Two light colour schemes with a coloured accent.**
 Students choose Ink or Dusk in the Appearance form; the template writes `data-palette` on `<html>` and section 2 of `main.css` swaps the nine `--color-*` variables. Each scheme keeps dark text on a light, slightly tinted background, a dark bottom block in the scheme's hue, and one accent colour used for links in running text, contact links, buttons, focus rings, the open Menu button and hover states. Every text pairing in both schemes meets WCAG AA (lowest 5.2:1), checked by `dev/check_palettes.py`, which reads the colours from the stylesheet itself. Set aside for now: dark schemes and following the visitor's dark-mode setting (each would need its own checks of image placeholders, focus rings and the header shadow); free colour pickers (students could choose unreadable combinations).
@@ -540,7 +543,7 @@ Building at a subfolder address matters: it is how GitHub Pages serves student s
 - **Many projects:** every project appears on the home page, so a student with twelve projects gets four rows. A cap (e.g. show the first seven, link to All projects for the rest) is a one-line change if wanted.
 - **Number of case studies:** not limited. Each is a full-width card, so three or more push ordinary projects far down the page. A limit (e.g. the first two case studies wide, the rest shown as projects) is open.
 - **Scripts covered:** Latin and Latin Extended only. Greek, Cyrillic or Vietnamese names would show in fallback fonts; add those subsets in `dev/build_fonts.py` if needed.
-- **Repository weight:** about 700 KB of font files in every student repository (visitors download only what is used).
+- **Repository weight:** about 1 MB of font files (about 700 KB before 0.6.5) in every student repository (visitors download only what is used).
 - **Build time:** image processing adds a few seconds per build; Hugo's cache (`resources/_gen`) is not kept between GitHub builds.
 - **robots.txt and subfolder sites:** crawlers read `robots.txt` only at a host's root, so on `username.github.io/repo/` it is ignored; only the page tags apply. Naming the student's repository `username.github.io` (site at the root) or using a custom domain makes `robots.txt` effective and gives a cleaner address.
 - **AI preference standards are moving:** IETF aipref is a draft; review the crawler list and vocabulary lines in `layouts/robots.txt` each year.
@@ -638,11 +641,19 @@ Tested locally (project and brief pages with sections; `dev/check_site.py` passe
 4. CSS: the Section dialog's backdrop colour moved into section 1 as `--overlay-backdrop`. No visible change.
 5. CSS: the remaining typography values moved into section 1 as custom properties (`--tracking-label`, `--tracking-caps`, `--tracking-caps-wide`, `--text-menu`, `--text-card-sub-3`, `--text-icon`, `--leading-none`, `--leading-lead`, `--leading-relaxed`); the unused `.visually-hidden` utility and its section removed, so the stylesheet now has 16 numbered sections. Screenshots before and after are pixel-identical (home, case study and Gallery pages at 1440 and 390 px; phone menu and section dialog open).
 
+
+22 November 2026 — version 0.6.5:
+1. Home page small print ends with "· Template: Alexander 0.6.5": the `name` and `version` in `themes/Alexander/theme.toml`, read at build time by a new partial, `theme-info.html` (`os.ReadFile` + `transform.Unmarshal`). `theme.toml` is the one place the version is kept: bump it with every release. If the file is missing or unreadable, the line is left out. Other pages keep "© year name · Built Month Year". Raised by Garrison: every output should record which version of its template it came from.
+2. Two more typefaces, chosen per student in **Appearance** like the others: **Figtree** (sans-serif, friendly; weights 300–900) and **Literata** (serif, made for long reading; 200–900). Both SIL OFL 1.1, from Fontsource, Latin and Latin Extended, normal and italic; generated with `dev/build_fonts.py` (the four existing fonts regenerate byte-identical). Added to `main.css` sections 1–2, the `$fonts` map in `baseof.html` and both select fields in `.pages.yml`; README table updated. About 290 KB more in each repository; visitors still download only the two faces chosen.
+3. Tools form: the Note hint now says a note is general (how long, how much, what kind of work, e.g. "C#; three years" or "used on two team projects") and is shown under the tool on the home page; evidence from one project belongs in that project's Sections. Raised by a persona fill (22 Nov), where a note copied from one project read as a general claim about the tool. README forms table updated.
+4. Version bumped to 0.6.5 (`theme.toml`, README prototype note, this guide).
+Tested locally: empty starter and a filled site build without warnings; the line appears on the home page only and wraps cleanly at 390 px; a build with `theme.toml` removed omits it; both new typefaces load and render as text and as titles (Figtree text with Literata titles, and the reverse) at 1440 and 390 px; `.pages.yml` parses; `dev/check_content.py` and `dev/check_site.py` pass. The new Appearance options and the Tools hint are not yet checked in Pages CMS.
+
 ---
 
 ## 13. Credits and licences
 
 - **Theme:** © 2026 Garrison LeMasters; MIT licence (`themes/Alexander/LICENSE`).
 - **Fonts** (SIL Open Font License 1.1; licence files in `themes/Alexander/static/fonts/<key>/OFL.txt`):
-  Atkinson Hyperlegible Next (Braille Institute of America), Inter (Rasmus Andersson / The Inter Project Authors), Source Serif 4 (Adobe; Frank Grießhammer), Fraunces (Undercase Type / The Fraunces Project Authors). Files from Fontsource (fontsource/font-files).
+  Atkinson Hyperlegible Next (Braille Institute of America), Inter (Rasmus Andersson / The Inter Project Authors), Source Serif 4 (Adobe; Frank Grießhammer), Fraunces (Undercase Type / The Fraunces Project Authors), Figtree (Erik Kennedy / The Figtree Project Authors), Literata (TypeTogether / The Literata Project Authors). Files from Fontsource (fontsource/font-files).
 - **Tools:** Hugo (Apache 2.0), Pages CMS (MIT), GitHub Actions and Pages.

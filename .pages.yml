@@ -333,7 +333,7 @@ content:
       - name: note
         label: Note (optional)
         type: string
-        description: e.g. "C#; three years".
+        description: 'General only: how long, how much, or what kind of work, e.g. "C#; three years" or "used on two team projects". Shown under the tool on your home page. Leave out anything about one project; that belongs in the project''s own Sections.' 
 
   - name: style
     label: Appearance
@@ -365,6 +365,10 @@ content:
               label: Source Serif 4 (serif, classic)
             - name: fraunces
               label: Fraunces (serif, expressive)
+            - name: figtree
+              label: Figtree (sans-serif, friendly)
+            - name: literata
+              label: Literata (serif, made for long reading)
       - name: titles
         label: Typeface for titles
         type: select
@@ -379,6 +383,10 @@ content:
               label: Inter (sans-serif, neutral)
             - name: atkinson
               label: Atkinson Hyperlegible Next (sans-serif, made for legibility)
+            - name: figtree
+              label: Figtree (sans-serif, friendly)
+            - name: literata
+              label: Literata (serif, made for long reading)
 
   - name: analytics
     label: Analytics
