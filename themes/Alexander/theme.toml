@@ -4,7 +4,7 @@ licenselink = "LICENSE"
 description = "A plain student portfolio theme for Hugo + Pages CMS + GitHub Pages. Sticky header with name, area of expertise and a section menu; projects laid out by how many there are (one wide feature, then rows); Experience, Education, Tools, About and Contact sections that appear only when filled in; a large closing block. Content lives in portable Markdown files; six self-hosted typefaces."
 homepage = ""
 min_version = "0.147.0"
-version = "0.6.6"
+version = "0.6.7"
 tags = ["portfolio", "minimal", "accessible", "pages-cms"]
 
 [author]
