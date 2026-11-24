@@ -1095,7 +1095,7 @@ a {
 
 /* Sections (partials/project-sections.html): picture beside text, one row per
    section, the picture swapping sides on each row and cropped to the text's
-   height (below). Narrow (under 40rem of space): picture whole, above text. A row with only a picture or only text: one
+   height (below). Narrow (under 40rem of space): heading, then picture whole, then text. A row with only a picture or only text: one
    column; text keeps its reading width. */
 .sections {
   container-type: inline-size;
@@ -1114,10 +1114,12 @@ a {
 
 /* A rule between sections that are shown: each section after another gets a line
    above it, centred in the space between. Empty sections are never written
-   (project-sections.html), so rules cannot stack. */
+   (project-sections.html), so rules cannot stack. Stacked (narrow), the line is
+   drawn in the muted text colour so a section's start is easy to see; side by
+   side it goes back to the pale rule colour (below). */
 .sections__row + .sections__row {
   padding-block-start: var(--space-xl);
-  border-block-start: 1px solid var(--color-rule);
+  border-block-start: 1px solid var(--color-text-muted);
 }
 
 .sections__image {
@@ -1134,12 +1136,18 @@ a {
   font-size: var(--text-md);
 }
 
-.sections__text h2 {
-  margin: 0 0 var(--space-xs);
+.sections__heading {
+  max-inline-size: 40rem;
+  margin: 0;
   font-family: var(--font-title);
   font-size: var(--title-xs);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-title);
+}
+
+/* Stacked: heading closer to what follows it (picture or text) than the row's gap. */
+.sections__heading {
+  margin-block-end: calc(var(--space-xs) - var(--space-s));
 }
 
 .sections__text > :first-child {
@@ -1152,15 +1160,30 @@ a {
 
 /* Fallback: without container queries, rows stay stacked at every width. */
 @container (min-width: 40rem) {
+  .sections__row + .sections__row {
+    border-block-start-color: var(--color-rule);
+  }
+
+  /* Heading in its own row above the text's column; picture and text share the
+     row below, so their tops line up. */
   .sections__row--left,
   .sections__row--right {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: ". head" "image text";
+    row-gap: var(--space-xs);
     align-items: stretch;
   }
 
-  .sections__row--right .sections__image {
-    order: 2;
+  .sections__row--right {
+    grid-template-areas: "head ." "text image";
   }
+
+  .sections__row--left .sections__heading,
+  .sections__row--right .sections__heading { grid-area: head; align-self: end; margin-block-end: 0; }
+  .sections__row--left .sections__image,
+  .sections__row--right .sections__image   { grid-area: image; }
+  .sections__row--left .sections__text,
+  .sections__row--right .sections__text    { grid-area: text; }
 
   /* The picture takes the height of its text: the row is as tall as the text (or
      --section-image-min, if the text is shorter), and the picture shrinks to fit
@@ -1194,7 +1217,7 @@ a {
     object-position: left top;      /* picture on the right: against the text */
   }
 
-  /* The heading's top lines up with the picture's top. */
+  /* The text's top lines up with the picture's top. */
   .sections__row--left .sections__text,
   .sections__row--right .sections__text {
     align-self: start;

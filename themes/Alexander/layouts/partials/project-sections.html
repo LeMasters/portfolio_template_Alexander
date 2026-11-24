@@ -1,8 +1,9 @@
 {{- /*
   A project's Sections: a picture beside a block of text, one row per section,
   the picture swapping sides on each row (left, right, left…). Where the space is
-  narrow (under 40rem: phones, or a brief's column) each row stacks: picture,
-  then text. A row with only a picture or only text spans the width and does not
+  narrow (under 40rem: phones, or a brief's column) each row stacks: heading,
+  picture, text. Side by side, the heading sits above the text's column and the
+  picture's top lines up with the text's top, not the heading's. A row with only a picture or only text spans the width and does not
   count toward the alternation.
 
   Usage: {{ partial "project-sections.html" (dict "page" . "kind" $kind) }}
@@ -31,6 +32,9 @@
   {{- $mod := "sections__row--single" -}}
   {{- if $pair }}{{ $n = add $n 1 }}{{ $mod = cond (modBool $n 2) "sections__row--right" "sections__row--left" }}{{ end }}
   <section class="sections__row {{ $mod }}"{{ with .heading }} aria-labelledby="section-{{ anchorize . }}"{{ end }}>
+    {{- with .heading }}
+    <h2 class="sections__heading" id="section-{{ anchorize . }}">{{ . }}</h2>
+    {{- end }}
     {{- with .image }}
     <figure class="sections__image">
       <a class="sections__open" href="{{ partial "img-full.html" . }}" data-dialog="{{ $dlg }}" aria-label="Open {{ $name }}, larger">
@@ -38,11 +42,8 @@
       </a>
     </figure>
     {{- end }}
-    {{- if or .heading .text }}
-    <div class="sections__text">
-      {{- with .heading }}<h2 id="section-{{ anchorize . }}">{{ . }}</h2>{{ end }}
-      {{- with .text }}{{ $.page.RenderString (dict "display" "block") . }}{{ end }}
-    </div>
+    {{- with .text }}
+    <div class="sections__text">{{ $.page.RenderString (dict "display" "block") . }}</div>
     {{- end }}
     {{- with .image }}
     <dialog class="sections__dialog" id="{{ $dlg }}" aria-label="{{ $name }}">
