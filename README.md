@@ -4,7 +4,7 @@ A plain, fast portfolio site. You edit it in **Pages CMS**; **GitHub** builds it
 
 You never need to install anything or touch code. Everything you write is kept in ordinary text files that you own and can take to any other site.
 
-> **Prototype, version 0.7.0 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
+> **Prototype, version 0.7.1 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
 
 ## Starting a new site from this template
 
@@ -124,7 +124,7 @@ Your site starts at `https://your-username.github.io/your-repository/`. You can 
 
 ### Which template made your site
 
-The small print at the very bottom of your home page ends with the template's name and version, e.g. "Template: Alexander 0.7.0". It tells your instructors which version of the template your site was made from. It changes only if the template files in `themes/Alexander/` are updated.
+The small print at the very bottom of your home page ends with the template's name and version, e.g. "Template: Alexander 0.7.1". It tells your instructors which version of the template your site was made from. It changes only if the template files in `themes/Alexander/` are updated.
 
 ## Where your content lives
 

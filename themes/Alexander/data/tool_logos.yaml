@@ -9,7 +9,7 @@
 - { name: "Aseprite", logo: aseprite }
 - { name: "Audacity", logo: audacity }
 - { name: "Blender", logo: blender }
-- { name: "C#", logo: generic }  # Microsoft
+- { name: "C#", logo: csharp }  # substitute drawn by Garrison
 - { name: "C++", logo: cplusplus }
 - { name: "Clip Studio Paint", logo: generic }
 - { name: "CSS3", logo: css }  # Simple Icons title: CSS
@@ -23,18 +23,18 @@
 - { name: "Godot Engine", logo: godot-engine }
 - { name: "Houdini", logo: houdini }
 - { name: "HTML5", logo: html5 }
-- { name: "Illustrator", logo: generic }  # Adobe
+- { name: "Illustrator", logo: adobe }  # substitute drawn by Garrison
 - { name: "Inkscape", logo: inkscape }
 - { name: "JavaScript", logo: javascript }
 - { name: "Jira", logo: jira }
 - { name: "Krita", logo: krita }
 - { name: "Lua", logo: lua }
-- { name: "Maya", logo: generic }  # Autodesk
+- { name: "Maya", logo: maya }  # substitute drawn by Garrison
 - { name: "Miro", logo: miro }
 - { name: "Notch", logo: generic }
 - { name: "p5.js", logo: p5-js }
 - { name: "Perforce", logo: perforce }
-- { name: "Photoshop", logo: generic }  # Adobe
+- { name: "Photoshop", logo: adobe }  # substitute drawn by Garrison
 - { name: "Procreate", logo: generic }
 - { name: "Python", logo: python }
 - { name: "Rust", logo: rust }
