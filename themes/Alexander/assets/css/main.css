@@ -839,8 +839,24 @@ a {
 }
 
 .tool__name {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
   font-weight: var(--weight-bold);
+}
+
+/* Tool logo (0.7.0): inlined SVG in the text colour, about a capital's height and a half. */
+.tool__logo {
+  flex: none;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+}
+
+.tool__logo svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  fill: currentColor;
 }
 
 .tool__note {

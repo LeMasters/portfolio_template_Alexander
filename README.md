@@ -4,7 +4,7 @@ A plain, fast portfolio site. You edit it in **Pages CMS**; **GitHub** builds it
 
 You never need to install anything or touch code. Everything you write is kept in ordinary text files that you own and can take to any other site.
 
-> **Prototype, version 0.6.7 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
+> **Prototype, version 0.7.0 (November 2026).** This is a bare starter for review by Miami faculty and a few students: it holds no content yet, so a new copy shows only "Your Name" until you fill in the forms. Comments and problems to Garrison LeMasters (ETBD).
 
 ## Starting a new site from this template
 
@@ -29,7 +29,7 @@ Open [app.pagescms.org](https://app.pagescms.org), choose this repository, and u
 | **Gallery** | One entry per image: title, image, whether to show it on the home page, alt text, order, caption | …the Gallery section, the Gallery page and the menu link disappear |
 | **Experience** | One entry per job, internship or assistantship: role, organization (and its website), location, dates, order, what you did, and related work chosen from a list of your Selected Work | …the Experience section disappears |
 | **Education** | One entry per degree or certificate: degree, school, year, order, optional detail | …the Education section disappears |
-| **Tools** | The software and tools you use, each with an optional note that stays general (how long, how much, what kind of work: "C#; three years"), never about one project | …the Tools section disappears |
+| **Tools** | The software, languages and media you use. Choose each from the **Tool** list, which shows it with its logo (or a plain icon); if yours isn't listed, type it under **Other tool**. Each has an optional note that stays general (how long, how much, what kind of work: "C#; three years"), never about one project | …the Tools section disappears |
 | **Appearance** | Colour scheme (Ink or Dusk), typeface for text, typeface for titles | (defaults are used: Ink, Atkinson, Fraunces) |
 | **Analytics** | Visitor statistics (a service, GoatCounter or Cloudflare, and its code); whether AI companies may train on your site (off unless you turn it on); an optional Google Search Console code | (no visitor statistics; AI training stays refused) |
 
@@ -124,7 +124,7 @@ Your site starts at `https://your-username.github.io/your-repository/`. You can 
 
 ### Which template made your site
 
-The small print at the very bottom of your home page ends with the template's name and version, e.g. "Template: Alexander 0.6.7". It tells your instructors which version of the template your site was made from. It changes only if the template files in `themes/Alexander/` are updated.
+The small print at the very bottom of your home page ends with the template's name and version, e.g. "Template: Alexander 0.7.0". It tells your instructors which version of the template your site was made from. It changes only if the template files in `themes/Alexander/` are updated.
 
 ## Where your content lives
 

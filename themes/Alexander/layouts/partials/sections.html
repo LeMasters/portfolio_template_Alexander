@@ -35,8 +35,12 @@
   {{- $out = $out | append (dict "id" "education" "label" "Education") -}}
 {{- end -}}
 
-{{- /* Tools: any tool with a name. */ -}}
-{{- with where (site.Data.tools | default slice) "name" "!=" "" -}}
+{{- /* Tools: any entry with a Tool chosen or an Other tool typed (0.7.0). */ -}}
+{{- $tools := slice -}}
+{{- range site.Data.tools | default slice -}}
+  {{- if or .tool .name -}}{{- $tools = $tools | append . -}}{{- end -}}
+{{- end -}}
+{{- with $tools -}}
   {{- $out = $out | append (dict "id" "tools" "label" "Tools") -}}
 {{- end -}}
 

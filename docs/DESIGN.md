@@ -1,6 +1,6 @@
 # Alexander — design and maintenance guide
 
-Version 0.6.7 · 24 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
+Version 0.7.0 · 24 November 2026 · Garrison LeMasters (ETBD, Miami University), with Claude
 
 *In the starter template (`AlexanderTemplate`), the maintainer files this guide mentions, `CLAUDE.md` and the test scripts in `dev/`, are left out. They are kept in the maintainer's copy.*
 
@@ -56,6 +56,7 @@ Contents
 | Wide cards (0.6.3): an image squarer than 1.4:1 shown whole on a tinted band; 3:2 and wider still fill the frame; form hint and README describe the crop | **Tested locally** (portrait sample at 390 and 1440 px; a build with a 3:2 image keeps the crop; `dev/check_site.py` passes) and **on GitHub** (22 Nov build). Looked at on the live site: **not yet** |
 | Selected Work (0.6.6): the projects section, its menu item, the Pages CMS form and the All projects page named "Selected Work"; every card, brief line and project page labelled with its kind ("Case study", "Project", "Brief"); the briefs list no longer headed "More projects" | **Tested locally** (23 Nov): Anne Southwell's and Robert Herrick's content built on 0.6.6 without warnings, every label and heading checked in the output; screenshots at 1440 and 390 px; the empty starter builds and shows no Selected Work section; `.pages.yml` parses. `dev/check_site.py` and `dev/check_content.py` **not run** (the maintainer folder was not connected). Not yet on GitHub or in Pages CMS |
 | Sections layout (0.6.7): side by side, the heading above the text's column and the picture's top level with the text's top; stacked, heading, then picture, then text; the rule between sections in the muted text colour when stacked | **Not yet tested.** Edited in Garrison's local copy on 24 Nov without a build (Hugo was not available to the session: `device_bash` cannot run his Mac's programs and the Hugo download is blocked there); checked by reading only. Committed and pushed by Garrison (`35b85e5`, then `3cbb3e2` with the version bump). **Built on GitHub** (24 Nov) in all three persona repositories: builds green, live home page shows the 0.6.7 line. Layout **checked in Chrome** on John Donne's live *Workshop of the World* (24 Nov): at 1440 px every two-column row has picture and text tops level and the heading 47 px above; at 500 px each section stacks heading, picture, text, with the darker rule; no sideways scrolling. Not yet on a real phone, Safari or Firefox |
+| Tool logos (0.7.0): Tool list and Other tool in the Tools form; each tool shown with its logo from `data/tool_logos.yaml`, or the generic icon; logos in the text colour, hidden from screen readers; old entries (name only) still shown | **Not yet tested.** Edited in Garrison's local copy on 24 Nov without a build (as 0.6.7); checked by reading only |
 | Other browsers (Safari, Firefox), real phones | **Not yet tested** |
 
 **0.5.0 (21 Nov)** added project kinds, larger section labels, picture-and-text Sections and an eighth form, Analytics. **0.6.0 (22 Nov) closes this series**: the case-study page reworked in one column (outlined intro box, the title repeated before the Sections); Sections pictures shrunk whole to their text's height, rules between sections, and a click opening each section in a dialog; seven suggested section headings; forms reordered to follow the page; "Alt text" labels. Snapshot: `DrPhill-0.6.0.zip` (template with sample content). Carried forward: the Experience dropdown's position in the form and a workaround for its behaviour (section 11); the Analytics form and the suggested headings confirmed in Pages CMS; real phones, Safari and Firefox (the section dialog included); neutral sample content and the student-path rehearsal before the template goes to students. Open: whether to limit the number of case studies; a crop anchor for wide cards, in reserve since 0.6.3 (section 11).
@@ -65,6 +66,8 @@ Contents
 **0.6.5 (22 Nov)**: the home page's small print names the template and its version ("Template: Alexander 0.6.5"), read from `theme.toml`, so a reviewer can tell which version a site was made from. Two more typefaces, Figtree (sans-serif) and Literata (serif), bring the Appearance choices to six.
 
 **0.6.6 (23 Nov)**: "Projects" renamed **Selected Work** wherever a student or visitor sees it (home-page heading, menu, Pages CMS form, All projects page, README); the folder `content/projects`, the field names and the `/projects/` addresses are unchanged, so existing copies keep working. Every piece of work now carries its kind as a small label before its title (cards and brief lines) and above it (its own page): "Case study", "Project" or "Brief". Until 0.6.5 only case studies were labelled. Raised by Garrison.
+
+**0.7.0 (24 Nov)**: tool logos. The Tools form gets a **Tool** list of 44 tools, languages and media; the old name field becomes **Other tool**. Each tool on the home page shows its logo (29 from Simple Icons) or a plain generic icon, in the text colour. Entries saved before 0.7.0 keep working. Requested by Garrison; untested in a browser (section 1).
 
 **0.6.7 (24 Nov)**: case-study Sections rearranged. Side by side, each heading now sits above its text's column, so the picture's top lines up with the text's top rather than the heading's. Stacked (phones), the order is heading, picture, text (it was picture, heading, text), and the line between sections is drawn in the muted text colour so each section's start is easy to see. Raised by Garrison. Untested in a browser (section 1).
 
@@ -295,7 +298,7 @@ Entries with neither `degree` nor `school` are skipped. Education entries are no
 
 ### `data/tools.yaml` (Tools form)
 
-A list of `{name, note}`. Items without a `name` are skipped.
+A list of `{tool, name, note}` (0.7.0; before, `{name, note}`). `tool` is a choice from the form's Tool list; `name` is the Other tool box, kept under its old key so entries saved before 0.7.0 still show. The page shows `tool`, else `name`; items with neither are skipped. The logo is looked up by that label in the theme's `data/tool_logos.yaml` (a list of `{name, logo}`, written by hand: `urlize` would turn C# and C++ into the same name) and read from `assets/tool-logos/<logo>.svg`; no match, or `logo: generic`, gives `generic.svg`. A typed name that matches a listed name gets that logo. To add a tool: add it to the Tool list in `.pages.yml` and to the map, with its SVG (24 × 24 viewBox, one path, no title) or `generic`.
 
 ### `data/analytics.yaml` (Analytics form; 0.5.0)
 
@@ -550,6 +553,7 @@ Building at a subfolder address matters: it is how GitHub Pages serves student s
 - **Wide cards crop 3:2 and wider images** to the frame (about 2:1 to 2.6:1, by screen); only squarer images are shown whole (0.6.3). If students still lose the tops or bottoms of shots, a top/middle/bottom crop anchor is the next step (one small optional field).
 - **Gallery thumbnails crop to squares**, so a panorama shows only its middle. A student can choose what is in the middle; a focal-point field would need one more form field.
 - **Rounded image corners (proposed 24 Nov, not built):** a checkbox in the Appearance form (`data/style.yaml`, written onto `<html>` like the palette) and one CSS rule would round cropped frames (cards, gallery thumbnails) and images shown at their own shape. Pictures shrunk to fit a box (side-by-side Sections, the section dialog, a squarer image on a wide card) would round the box, not the visible picture, unless they are re-sized so the image element is the picture (max inline/block size inside the box, pinned to the text side and top). Suggested defaults: off, one radius (about 0.5 rem). Waiting on a way to preview builds (section 9).
+- **Tool logos (0.7.0):** built (section 4, `data/tools.yaml`). 44 choices; 29 Simple Icons logos (16.38.1), 15 generic: 3ds Max, Ableton Live (removed from Simple Icons since early 2025), AI tools, C#, Clip Studio Paint, disguise, Illustrator, Maya, Notch, Photoshop, Procreate, TouchDesigner, Traditional media, Twine, ZBrush. Brand-kit logos (Adobe, Autodesk, Microsoft) could replace a `generic` later; check their recolouring terms first, since logos here take the text colour. Each added tool is a template change copied into every site by hand. `dev/check_content.py` should compare the Tool list with the map and check every logo file exists (not yet written).
 - **Many projects:** every project appears on the home page, so a student with twelve projects gets four rows. A cap (e.g. show the first seven, link to All projects for the rest) is a one-line change if wanted.
 - **Number of case studies:** not limited. Each is a full-width card, so three or more push ordinary projects far down the page. A limit (e.g. the first two case studies wide, the rest shown as projects) is open.
 - **Scripts covered:** Latin and Latin Extended only. Greek, Cyrillic or Vietnamese names would show in fallback fonts; add those subsets in `dev/build_fonts.py` if needed.
@@ -676,6 +680,14 @@ Tested locally: Anne Southwell's content (one case study, two projects, four bri
 6. Student worksheet (Claude Doc and its copy in `ETBD_Portfolio_Project`) moved to version 1.4, "for Alexander 0.6.7": version line and change-log row only, since no form changed.
 Not built locally: edited without Hugo (see section 9, "Previewing from a session"). Items 1–4 were committed and pushed by Garrison as `35b85e5` (24 Nov) under version 0.6.6; item 5 is `3cbb3e2`. Copied to the three persona repositories the same day; their GitHub builds passed. Checked in Chrome at 1440 and 500 px on John Donne's live case study.
 
+24 November 2026 — version 0.7.0 (tool logos):
+1. Tools form (`.pages.yml`): new `tool` select field (44 values, alphabetical) first; the `name` field relabelled **Other tool** and no longer required; Note hint gains the Traditional media example.
+2. `themes/Alexander/data/tool_logos.yaml`: the name-to-logo list. `themes/Alexander/assets/tool-logos/`: 29 SVGs from Simple Icons 16.38.1 (fetched from jsDelivr in Chrome; titles removed, single path, 24 × 24) and `generic.svg` (a rounded square with a centre square, drawn for Alexander). CSS3 uses Simple Icons' `css` (now titled "CSS"); Ableton Live is no longer in Simple Icons and uses the generic icon.
+3. `partials/section-tools.html`: label = `tool`, else `name`; logo inlined (`aria-hidden="true"`) before the label. `partials/sections.html`: the Tools section exists if any entry has `tool` or `name`.
+4. `main.css`: `.tool__name` a flex row; `.tool__logo` about 1.15 em, `fill: currentColor`.
+5. Version bumped to 0.7.0 (`theme.toml`, README prototype note, template-line example and Tools row, this guide).
+Not built locally (no Hugo in the session). The student worksheet, Setup Instructions and Best Practices are updated for the new form.
+
 ---
 
 ## 13. Credits and licences
@@ -683,4 +695,5 @@ Not built locally: edited without Hugo (see section 9, "Previewing from a sessio
 - **Theme:** © 2026 Garrison LeMasters; MIT licence (`themes/Alexander/LICENSE`).
 - **Fonts** (SIL Open Font License 1.1; licence files in `themes/Alexander/static/fonts/<key>/OFL.txt`):
   Atkinson Hyperlegible Next (Braille Institute of America), Inter (Rasmus Andersson / The Inter Project Authors), Source Serif 4 (Adobe; Frank Grießhammer), Fraunces (Undercase Type / The Fraunces Project Authors), Figtree (Erik Kennedy / The Figtree Project Authors), Literata (TypeTogether / The Literata Project Authors). Files from Fontsource (fontsource/font-files).
+- **Tool logos:** Simple Icons (CC0 1.0, simpleicons.org); the brands remain their owners' trademarks. `generic.svg` drawn for Alexander (MIT).
 - **Tools:** Hugo (Apache 2.0), Pages CMS (MIT), GitHub Actions and Pages.

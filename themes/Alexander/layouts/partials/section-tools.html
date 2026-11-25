@@ -1,12 +1,25 @@
-{{- /* Tools: the list in data/tools.yaml (name, optional note). */ -}}
+{{- /* Tools: the list in data/tools.yaml. Each entry shows the Tool chosen from the
+     list, or else the name typed under Other tool, with its logo: looked up by name in
+     the theme's data/tool_logos.yaml, else the generic icon (0.7.0). Logos are inlined
+     so they take the text colour, and hidden from screen readers. Optional note below. */ -}}
+{{- $logos := site.Data.tool_logos | default slice -}}
 <section id="tools" class="wrap section" aria-labelledby="tools-h">
   <h2 id="tools-h" class="section__title">Tools</h2>
   <ul class="tools">
-    {{- range where site.Data.tools "name" "!=" "" }}
+    {{- range site.Data.tools | default slice }}
+    {{- $label := .tool | default .name }}
+    {{- if $label }}
+    {{- $file := "generic" }}
+    {{- range first 1 (where $logos "name" $label) }}{{ $file = .logo }}{{ end }}
+    {{- $svg := resources.Get (printf "tool-logos/%s.svg" $file) | default (resources.Get "tool-logos/generic.svg") }}
     <li class="tool">
-      <span class="tool__name">{{ .name }}</span>
+      <span class="tool__name">
+        {{- with $svg }}<span class="tool__logo" aria-hidden="true">{{ .Content | safeHTML }}</span>{{ end -}}
+        <span>{{ $label }}</span>
+      </span>
       {{- with .note }}<span class="tool__note">{{ . }}</span>{{ end }}
     </li>
+    {{- end }}
     {{- end }}
   </ul>
 </section>

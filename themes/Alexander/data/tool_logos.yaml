@@ -1,0 +1,49 @@
+# Tool logos (0.7.0). One entry per choice in the Tools form's Tool list (.pages.yml).
+# name: the tool's name exactly as the list stores it. logo: a file in assets/tool-logos/
+# (without .svg), or generic for the plain icon. Logos: Simple Icons 16.38.1 (CC0;
+# trademarks belong to their owners). A name typed under Other tool that matches a
+# name here gets the same logo. Keep this list and the Tool list in step.
+- { name: "3ds Max", logo: generic }  # Autodesk
+- { name: "Ableton Live", logo: generic }  # removed from Simple Icons
+- { name: "AI tools", logo: generic }
+- { name: "Aseprite", logo: aseprite }
+- { name: "Audacity", logo: audacity }
+- { name: "Blender", logo: blender }
+- { name: "C#", logo: generic }  # Microsoft
+- { name: "C++", logo: cplusplus }
+- { name: "Clip Studio Paint", logo: generic }
+- { name: "CSS3", logo: css }  # Simple Icons title: CSS
+- { name: "disguise", logo: generic }
+- { name: "Figma", logo: figma }
+- { name: "FMOD", logo: fmod }
+- { name: "GIMP", logo: gimp }
+- { name: "Git", logo: git }
+- { name: "GitHub", logo: github }
+- { name: "Go", logo: go }
+- { name: "Godot Engine", logo: godot-engine }
+- { name: "Houdini", logo: houdini }
+- { name: "HTML5", logo: html5 }
+- { name: "Illustrator", logo: generic }  # Adobe
+- { name: "Inkscape", logo: inkscape }
+- { name: "JavaScript", logo: javascript }
+- { name: "Jira", logo: jira }
+- { name: "Krita", logo: krita }
+- { name: "Lua", logo: lua }
+- { name: "Maya", logo: generic }  # Autodesk
+- { name: "Miro", logo: miro }
+- { name: "Notch", logo: generic }
+- { name: "p5.js", logo: p5-js }
+- { name: "Perforce", logo: perforce }
+- { name: "Photoshop", logo: generic }  # Adobe
+- { name: "Procreate", logo: generic }
+- { name: "Python", logo: python }
+- { name: "Rust", logo: rust }
+- { name: "Swift", logo: swift }
+- { name: "TouchDesigner", logo: generic }
+- { name: "Traditional media", logo: generic }
+- { name: "Trello", logo: trello }
+- { name: "Twine", logo: generic }
+- { name: "Unity", logo: unity }
+- { name: "Unreal Engine", logo: unreal-engine }
+- { name: "Wwise", logo: wwise }
+- { name: "ZBrush", logo: generic }

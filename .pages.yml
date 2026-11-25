@@ -327,15 +327,64 @@ content:
     format: yaml
     list: true
     fields:
-      - name: name
+      - name: tool
         label: Tool
+        type: select
+        description: Choose the tool; it appears with its logo (or a plain icon). Not in the list? Leave this empty and type it under Other tool. Remove every tool to hide the Tools section.
+        options:
+          values:
+            - "3ds Max"
+            - "Ableton Live"
+            - "AI tools"
+            - "Aseprite"
+            - "Audacity"
+            - "Blender"
+            - "C#"
+            - "C++"
+            - "Clip Studio Paint"
+            - "CSS3"
+            - "disguise"
+            - "Figma"
+            - "FMOD"
+            - "GIMP"
+            - "Git"
+            - "GitHub"
+            - "Go"
+            - "Godot Engine"
+            - "Houdini"
+            - "HTML5"
+            - "Illustrator"
+            - "Inkscape"
+            - "JavaScript"
+            - "Jira"
+            - "Krita"
+            - "Lua"
+            - "Maya"
+            - "Miro"
+            - "Notch"
+            - "p5.js"
+            - "Perforce"
+            - "Photoshop"
+            - "Procreate"
+            - "Python"
+            - "Rust"
+            - "Swift"
+            - "TouchDesigner"
+            - "Traditional media"
+            - "Trello"
+            - "Twine"
+            - "Unity"
+            - "Unreal Engine"
+            - "Wwise"
+            - "ZBrush"
+      - name: name
+        label: Other tool
         type: string
-        required: true
-        description: e.g. Unity, Blender, Figma. Remove every tool to hide the Tools section.
+        description: Only for a tool that isn't in the list above, e.g. "Twine 2" or "Substance 3D Painter". Shown with a plain icon. Ignored if a Tool is chosen above.
       - name: note
         label: Note (optional)
         type: string
-        description: 'General only: how long, how much, or what kind of work, e.g. "C#; three years" or "used on two team projects". Shown under the tool on your home page. Leave out anything about one project; that belongs in the project''s own Sections.' 
+        description: 'General only: how long, how much, or what kind of work, e.g. "C#; three years" or "used on two team projects". For Traditional media, name the media: "pen and ink, coloured pencil, acrylic on canvas". Shown under the tool on your home page. Leave out anything about one project; that belongs in the project''s own Sections.'
 
   - name: style
     label: Appearance
